@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SkladTable.Tables
 {
-    class Unit_Of_Measurement
+    public class Unit_Of_Measurement
     {
         public int Unit_Of_MeasurementID { get; set; }
         public string Full_Title { get; set; }

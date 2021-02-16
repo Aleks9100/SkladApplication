@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SkladTable.Tables
 {
-    class Employee
+   public class Employee
     {
         public int EmployeeID { get; set; }
         public string FirstName { get; set; }
