@@ -8,7 +8,8 @@ namespace SkladTable.Tables
     {
         public int EmployeeID { get; set; }
         public string FirstName { get; set; }
-        public string LatsName { get; set; }
+        public string LastName { get; set; }
         public string MiddleName { get; set; }
+        public virtual ICollection<Operation> Operation { get; set; }
     }
 }

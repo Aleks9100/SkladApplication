@@ -13,5 +13,6 @@ namespace SkladTable.Tables
         public virtual Product_Type Product_Type { get; set; }
         public int? Unit_Of_MeasurementID { get; set; }
         public virtual Unit_Of_Measurement Unit_Of_Measurement { get; set; }
+        public virtual ICollection<Operation> Operation { get; set; }
     }
 }

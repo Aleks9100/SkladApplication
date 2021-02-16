@@ -9,15 +9,18 @@ namespace SkladTable.Tables
         public int OperationID { get; set; }
         public Operations Operations { get; set; }
         public string Document { get; set; }
-        public int Number_Document{get;set;}   
+        public int Number_Document { get; set; }
         public decimal Result { get; set; }
-        public decimal Price_Count (decimal price,int count ) 
+        public int Quantity { get; set; }
+        public decimal Price_Count(decimal price, int count)
         {
             return price * count;
         }
-        //Связь с сотруд ником настрой.
-
-}
+        public int? EmplloyeeID { get; set; }
+        public virtual Employee Employee { get; set; }
+        public virtual ICollection<Product> Product { get; set; }
+   
+    }
         public enum Operations
         {
             Sale,

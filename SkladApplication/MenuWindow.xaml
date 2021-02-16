@@ -1,0 +1,244 @@
+﻿<Window x:Class="SkladApplication.MenuWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SkladApplication"
+        mc:Ignorable="d"
+       Title="Menu" Height="450" Width="800" Background="#808080">
+    <Window.Resources>
+        <Style TargetType="DockPanel">
+            <Setter Property="Background" Value="#C0C0C0"/>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="#00BFFF"/>
+            <Setter Property="BorderBrush" Value="Gray"/>
+            <Setter Property="BorderThickness" Value="0, 0, 0, 0.8"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0, 3, 0, 1"/>
+        </Style>
+        <Style TargetType="DataGrid">
+            <Setter Property="Margin" Value="3"/>
+            <Setter Property="AutoGenerateColumns" Value="False"/>
+        </Style>
+        <Style TargetType="TabItem">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0, 0.5" EndPoint="1, 0.5" >
+                        <GradientStop Color="Gray" Offset="1.0"/>
+                        <GradientStop Color="#C0C0C0" Offset="0.0"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="BorderBrush" Value="#1E90FF"/>
+        </Style>
+        <Style TargetType="ComboBox">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#1E90FF"/>
+        </Style>
+        <Style TargetType="ComboBoxItem">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#1E90FF"/>
+        </Style>
+        <Style TargetType="DataGridRow">
+            <Setter Property="Background" Value="#808080"/>
+            <Setter Property="BorderBrush" Value="#1E90FF"/>
+            <Setter Property="BorderThickness" Value="0,0,0,0.8"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <TabControl TabStripPlacement="Left" HorizontalAlignment="Center" Height="399" VerticalAlignment="Top" Width="770" Margin="10,10,10,0">
+            <TabItem Header="Операции">
+                <Grid Background="#C0C0C0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="7*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <DataGrid x:Name="DGR_User" Grid.Column="0" SelectedValuePath="UserID">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Движение"  Binding="{Binding Path=Operations}" Width="*"/>
+                            <DataGridTextColumn Header="Документ"  Binding="{Binding Path=Document}" Width="*"/>
+                            <DataGridTextColumn Header="Номер документа"  Binding="{Binding Path=Number_Document}" Width="*"/>
+                            <DataGridTextColumn Header="Кол-во товаров"  Binding="{Binding Path=Quantity}" Width="*"/>
+                            <DataGridTextColumn Header="Итоговая цена"  Binding="{Binding Path=Result}" Width="*"/>
+                            <DataGridTextColumn Header="Сотрудник"  Binding="{Binding Path=Employee.LastName}" Width="*"/>
+                            <DataGridTextColumn Header="Товар"  Binding="{Binding Path=Product.Title}" Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <DockPanel Background="#C0C0C0" Grid.Column="1">
+                        <StackPanel DockPanel.Dock="Top">
+                            <TextBlock Text="Движение"/>
+                            <ComboBox x:Name="CB_Oper"/>
+                            <TextBlock Text="Документ"/>
+                            <TextBox x:Name="TB_Doc"/>
+                            <TextBlock Text="Номер документа"/>
+                            <TextBox x:Name="TB_NumD"/>
+                            <TextBlock Text="Кол-во товаров"/>
+                            <TextBox x:Name="TB_Quantity"/>
+                            <TextBlock Text="Итоговая цена"/>
+                            <TextBox x:Name="TB_Result" IsReadOnly="True"/>
+                            <TextBlock Text="Сотрудник"/>
+                            <ComboBox x:Name="CB_Empl" SelectedValuePath="EmployeeID" DisplayMemberPath="LastName"/>
+                            <TextBlock Text="Товар"/>
+                            <ComboBox x:Name="CB_Product" SelectedValuePath="ProductID" DisplayMemberPath="Title"/>
+                        </StackPanel>
+                        <StackPanel Margin="0,10,0,0">
+                            <Button Content="Добавить"/>
+                            <Button Content="Изменить запись"/>
+                            <Button Content="Удалить запись"/>
+                        </StackPanel>
+
+                    </DockPanel>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Товары">
+                <Grid Background="#FFE5E5E5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="7*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <DataGrid x:Name="DGR_Position" Grid.Column="0" SelectedValuePath="PositionID">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Название"  Binding="{Binding Path=Title}" Width="*"/>
+                            <DataGridTextColumn Header="Цена"  Binding="{Binding Path=Price}" Width="*"/>
+                            <DataGridTextColumn Header="Тип товара"  Binding="{Binding Path=Product_Type.Title}" Width="*"/>
+                            <DataGridTextColumn Header="Единица измерения"  Binding="{Binding Path=Unit_of_Measurement.Short_Title}" Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <DockPanel Grid.Column="1">
+                        <StackPanel DockPanel.Dock="Top">
+                            <TextBlock Text="Название"/>
+                            <TextBox x:Name="TB_TitleP"/>
+                            <TextBlock Text="Цена"/>
+                            <TextBox x:Name="TB_Price"/>
+                            <TextBlock Text="Тип товара"/>
+                            <ComboBox x:Name="CB_Product_Type"/>
+                            <TextBlock Text="Единица измерения"/>
+                            <ComboBox x:Name="CB_Unit_Of_Measurement"/>
+                        </StackPanel>
+                        <StackPanel DockPanel.Dock="Bottom" Margin="0,5,0,0">
+                            <Button Content="Добавить"/>
+                            <Button Content="Изменить запись" />
+                            <Button Content="Удалить запись"/>
+                        </StackPanel>
+                    </DockPanel>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Сотрудники">
+                <Grid Background="#FFE5E5E5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="7*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <DataGrid x:Name="DGR_Employee" Grid.Column="0" SelectedValuePath="EmployeeID">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Фамилия"  Binding="{Binding Path=FirstName}" Width="*"/>
+                            <DataGridTextColumn Header="Имя"  Binding="{Binding Path=LastName}" Width="*"/>
+                            <DataGridTextColumn Header="Отчество"  Binding="{Binding Path=MiddleName}" Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <DockPanel Grid.Column="1">
+                        <StackPanel DockPanel.Dock="Top">
+                            <TextBlock Text="Фамилия"/>
+                            <TextBox x:Name="TB_LastNameE"/>
+                            <TextBlock Text="Имя"/>
+                            <TextBox x:Name="TB_FirstNameE"/>
+                            <TextBlock Text="Отчество"/>
+                            <TextBox x:Name="TB_MidleNameE"/>
+                        </StackPanel>
+                        <StackPanel DockPanel.Dock="Bottom" Margin="0,5,0,0">
+                            <Button Content="Добавить" />
+                            <Button Content="Изменить запись"/>
+                            <Button Content="Удалить запись"/>
+                        </StackPanel>
+                    </DockPanel>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Тип продукта">
+                <Grid Background="#FFE5E5E5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="7*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <DataGrid x:Name="DGR_Supplier" Grid.Column="0" SelectedValuePath="SupplierID">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Название"  Binding="{Binding Path=Title}" Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <DockPanel Grid.Column="1">
+                        <StackPanel DockPanel.Dock="Top">
+                            <TextBlock Text="Название"/>
+                            <TextBox x:Name="TB_Title_Type"/>
+                        </StackPanel>
+                        <StackPanel DockPanel.Dock="Bottom" Margin="0,5,0,0">
+                            <Button Content="Добавить" />
+                            <Button Content="Изменить запись" />
+                            <Button Content="Удалить запись"/>
+                        </StackPanel>
+                    </DockPanel>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Единица измерения">
+                <Grid Background="#FFE5E5E5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="7*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <DataGrid x:Name="DGR_Item" Grid.Column="0" SelectedValuePath="ItemID">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Полное название"  Binding="{Binding Path=Full_Title}"/>
+                            <DataGridTextColumn Header="Краткое название"  Binding="{Binding Path=Short_Title}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <DockPanel Grid.Column="1">
+                        <StackPanel DockPanel.Dock="Top">
+                            <TextBlock Text="Полное название"/>
+                            <TextBox x:Name="TB_TitleFull"/>
+                            <TextBlock Text="Краткое название"/>
+                            <TextBox x:Name="TB_TitleShort"/>
+                        </StackPanel>
+                        <StackPanel DockPanel.Dock="Bottom" Margin="0,5,0,0">
+                            <Button Content="Добавить"/>
+                            <Button Content="Изменить запись"/>
+                            <Button Content="Удалить запись"/>
+                        </StackPanel>
+                    </DockPanel>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Пользователи">
+                <Grid Background="#FFE5E5E5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="7*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <DataGrid x:Name="DGR_Users" Grid.Column="0" SelectedValuePath="UserID">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Логин"  Binding="{Binding Path=Login}" Width="*"/>
+                            <DataGridTextColumn Header="Пароль"  Binding="{Binding Path=Password}" Width="*"/>
+                            <DataGridTextColumn Header="Статус"  Binding="{Binding Path=Status}" Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <DockPanel Grid.Column="1">
+                        <StackPanel DockPanel.Dock="Top">
+                            <TextBlock Text="Логин"/>
+                            <TextBox x:Name="TB_Login"/>
+                            <TextBlock Text="Пароль"/>
+                            <TextBox x:Name="TB_Password"/>
+                            <TextBlock Text="Статус"/>
+                            <TextBox x:Name="TB_Status"/>
+                        </StackPanel>
+                        <StackPanel DockPanel.Dock="Bottom" Margin="0,5,0,0">
+                            <Button Content="Добавить"/>
+                            <Button Content="Изменить запись"/>
+                            <Button Content="Удалить запись"/>
+                        </StackPanel>
+                    </DockPanel>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>
