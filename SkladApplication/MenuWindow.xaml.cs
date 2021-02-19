@@ -25,13 +25,21 @@ namespace SkladApplication
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            using (var Db = new SkladModel())
+            try
             {
-                if (CB_Status.SelectedValue.ToString() == "Админ")
+                using (var Db = new SkladModel())
                 {
-                    MessageBox.Show(Db.AddUser(TB_Login.Text,TB_Password.Text,SkladTable.Tables.Status.Admin)); 
+                    if (CB_Status.SelectedValue.ToString() == "Админ")
+                    {
+                        MessageBox.Show(Db.AddUser(TB_Login.Text, TB_Password.Text, SkladTable.Status.Admin));
+                    }
+                    else if (CB_Status.SelectedValue.ToString() == "Юзер")
+                    {
+                        MessageBox.Show(Db.AddUser(TB_Login.Text, TB_Password.Text, SkladTable.Status.User));
+                    }
                 }
             }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
     }
 }

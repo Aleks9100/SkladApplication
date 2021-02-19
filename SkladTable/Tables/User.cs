@@ -11,9 +11,5 @@ namespace SkladTable.Tables
         public string Password { get; set; }
         public Status Status { get; set; }
     }
-    public enum Status 
-    {
-        Admin,
-        User
-    }
+   
 }

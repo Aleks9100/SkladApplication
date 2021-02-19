@@ -16,10 +16,5 @@ namespace SkladTable.Tables
         public virtual Employee Employee { get; set; }
         public virtual ICollection<Product> Product { get; set; }
    
-    }
-        public enum OperationStatus
-        {
-            Sale,
-            Purchase
-        }
+    }     
 }

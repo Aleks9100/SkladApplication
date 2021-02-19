@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
+using SkladTable;
 using SkladTable.Tables;
 
 namespace SkladDatabase
@@ -57,7 +58,7 @@ namespace SkladDatabase
                 {
                     Login = login,
                     Password = passsword,
-                    Status = Status.User
+                    Status = (SkladTable.Status)Status.User
                 };
             }
             Users.Add(user);
@@ -175,6 +176,6 @@ namespace SkladDatabase
         public bool count(int count) 
         {
             return count > 0;
-        }
+        }     
     }
 }
