@@ -115,6 +115,8 @@
                             <TextBox x:Name="TB_TitleP"/>
                             <TextBlock Text="Цена"/>
                             <TextBox x:Name="TB_Price"/>
+                            <TextBlock Text="Количество"/>
+                            <TextBox x:Name="TB_QuantityP"/>
                             <TextBlock Text="Тип товара"/>
                             <ComboBox x:Name="CB_Product_Type"/>
                             <TextBlock Text="Единица измерения"/>
@@ -229,10 +231,10 @@
                             <TextBlock Text="Пароль"/>
                             <TextBox x:Name="TB_Password"/>
                             <TextBlock Text="Статус"/>
-                            <TextBox x:Name="TB_Status"/>
+                            <ComboBox x:Name="CB_Status"/>
                         </StackPanel>
                         <StackPanel DockPanel.Dock="Bottom" Margin="0,5,0,0">
-                            <Button Content="Добавить"/>
+                            <Button Content="Добавить" Click="Button_Click"/>
                             <Button Content="Изменить запись"/>
                             <Button Content="Удалить запись"/>
                         </StackPanel>

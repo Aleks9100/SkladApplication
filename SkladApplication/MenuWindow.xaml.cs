@@ -9,6 +9,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using SkladDatabase;
 
 namespace SkladApplication
 {
@@ -20,6 +21,17 @@ namespace SkladApplication
         public MenuWindow()
         {
             InitializeComponent();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            using (var Db = new SkladModel())
+            {
+                if (CB_Status.SelectedValue.ToString() == "Админ")
+                {
+                    MessageBox.Show(Db.AddUser(TB_Login.Text,TB_Password.Text,SkladTable.Tables.Status.Admin)); 
+                }
+            }
         }
     }
 }
