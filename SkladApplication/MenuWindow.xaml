@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SkladApplication"
         mc:Ignorable="d"
-       Title="Menu" Height="450" Width="800" Background="#808080">
+       Title="Menu" Height="450" Width="900" Background="#808080">
     <Window.Resources>
         <Style TargetType="DockPanel">
             <Setter Property="Background" Value="#C0C0C0"/>
@@ -51,19 +51,20 @@
         </Style>
     </Window.Resources>
     <Grid>
-        <TabControl TabStripPlacement="Left" HorizontalAlignment="Center" Height="399" VerticalAlignment="Top" Width="770" Margin="10,10,10,0">
+        <TabControl TabStripPlacement="Left" HorizontalAlignment="Center" Height="399" VerticalAlignment="Top" Width="870" Margin="10,10,10,0">
             <TabItem Header="Операции">
                 <Grid Background="#C0C0C0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="7*"/>
                         <ColumnDefinition Width="2*"/>
                     </Grid.ColumnDefinitions>
-                    <DataGrid x:Name="DGR_User" Grid.Column="0" SelectedValuePath="UserID">
+                    <DataGrid x:Name="DGR_Operation" Grid.Column="0" SelectedValuePath="UserID">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Движение"  Binding="{Binding Path=Operations}" Width="*"/>
                             <DataGridTextColumn Header="Документ"  Binding="{Binding Path=Document}" Width="*"/>
                             <DataGridTextColumn Header="Номер документа"  Binding="{Binding Path=Number_Document}" Width="*"/>
                             <DataGridTextColumn Header="Кол-во товаров"  Binding="{Binding Path=Quantity}" Width="*"/>
+                            <DataGridTextColumn Header="Дата" Binding="{Binding Path=Date_Of_Completion}" Width="*"/>
                             <DataGridTextColumn Header="Итоговая цена"  Binding="{Binding Path=Result}" Width="*"/>
                             <DataGridTextColumn Header="Сотрудник"  Binding="{Binding Path=Employee.LastName}" Width="*"/>
                             <DataGridTextColumn Header="Товар"  Binding="{Binding Path=Product.Title}" Width="*"/>
@@ -73,23 +74,25 @@
                         <StackPanel DockPanel.Dock="Top">
                             <TextBlock Text="Движение"/>
                             <ComboBox x:Name="CB_Oper"/>
+                            <TextBlock Text="Товар"/>
+                            <ComboBox x:Name="CB_Product" SelectedValuePath="ProductID" DisplayMemberPath="Title"/>
                             <TextBlock Text="Документ"/>
                             <TextBox x:Name="TB_Doc"/>
                             <TextBlock Text="Номер документа"/>
                             <TextBox x:Name="TB_NumD"/>
                             <TextBlock Text="Кол-во товаров"/>
-                            <TextBox x:Name="TB_Quantity"/>
+                            <TextBox x:Name="TB_Quantity" TextChanged="TB_Quantity_TextChanged"/>
+                            <TextBlock Text="Дата"/>
+                            <DatePicker x:Name="DP_Date_Of_Completion"/>
                             <TextBlock Text="Итоговая цена"/>
                             <TextBox x:Name="TB_Result" IsReadOnly="True"/>
                             <TextBlock Text="Сотрудник"/>
-                            <ComboBox x:Name="CB_Empl" SelectedValuePath="EmployeeID" DisplayMemberPath="LastName"/>
-                            <TextBlock Text="Товар"/>
-                            <ComboBox x:Name="CB_Product" SelectedValuePath="ProductID" DisplayMemberPath="Title"/>
+                            <ComboBox x:Name="CB_Empl" SelectedValuePath="EmployeeID" DisplayMemberPath="LastName" SelectionChanged="CB_Empl_SelectionChanged"/>
                         </StackPanel>
                         <StackPanel Margin="0,10,0,0">
-                            <Button Content="Добавить"/>
-                            <Button Content="Изменить запись"/>
-                            <Button Content="Удалить запись"/>
+                            <Button Content="Добавить" Name="AddOperation" Click="AddOperation_Click"/>
+                            <Button Content="Изменить запись" Name="EditOperation" Click="EditOperation_Click"/>
+                            <Button Content="Удалить запись" Name="RemoveOperation" Click="RemoveOperation_Click"/>
                         </StackPanel>
 
                     </DockPanel>
@@ -101,7 +104,7 @@
                         <ColumnDefinition Width="7*"/>
                         <ColumnDefinition Width="2*"/>
                     </Grid.ColumnDefinitions>
-                    <DataGrid x:Name="DGR_Position" Grid.Column="0" SelectedValuePath="PositionID">
+                    <DataGrid x:Name="DGR_Product" Grid.Column="0" SelectedValuePath="PositionID">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Название"  Binding="{Binding Path=Title}" Width="*"/>
                             <DataGridTextColumn Header="Цена"  Binding="{Binding Path=Price}" Width="*"/>
@@ -118,14 +121,14 @@
                             <TextBlock Text="Количество"/>
                             <TextBox x:Name="TB_QuantityP"/>
                             <TextBlock Text="Тип товара"/>
-                            <ComboBox x:Name="CB_Product_Type"/>
+                            <ComboBox x:Name="CB_Product_Type" DisplayMemberPath="Title" SelectedValuePath="Product_TypeID"/>
                             <TextBlock Text="Единица измерения"/>
-                            <ComboBox x:Name="CB_Unit_Of_Measurement"/>
+                            <ComboBox x:Name="CB_Unit_Of_Measurement" DisplayMemberPath="Full_Title" SelectedValuePath ="Unit_Of_MeasurementID"/>
                         </StackPanel>
                         <StackPanel DockPanel.Dock="Bottom" Margin="0,5,0,0">
-                            <Button Content="Добавить"/>
-                            <Button Content="Изменить запись" />
-                            <Button Content="Удалить запись"/>
+                            <Button Content="Добавить" Name="AddProduct" Click="AddProduct_Click"/>
+                            <Button Content="Изменить запись" Name="EditProduct" Click="EditProduct_Click"/>
+                            <Button Content="Удалить запись" Name="RemoveProduct" Click="RemoveProduct_Click"/>
                         </StackPanel>
                     </DockPanel>
                 </Grid>
@@ -153,9 +156,9 @@
                             <TextBox x:Name="TB_MidleNameE"/>
                         </StackPanel>
                         <StackPanel DockPanel.Dock="Bottom" Margin="0,5,0,0">
-                            <Button Content="Добавить" />
-                            <Button Content="Изменить запись"/>
-                            <Button Content="Удалить запись"/>
+                            <Button Content="Добавить" Name="AddEmploee" Click="AddEmploee_Click"/>
+                            <Button Content="Изменить запись" Name="EditEmploee" Click="EditEmploee_Click"/>
+                            <Button Content="Удалить запись" Name="RemoveEmploee" Click="RemoveEmploee_Click"/>
                         </StackPanel>
                     </DockPanel>
                 </Grid>
@@ -166,7 +169,7 @@
                         <ColumnDefinition Width="7*"/>
                         <ColumnDefinition Width="2*"/>
                     </Grid.ColumnDefinitions>
-                    <DataGrid x:Name="DGR_Supplier" Grid.Column="0" SelectedValuePath="SupplierID">
+                    <DataGrid x:Name="DGR_Type" Grid.Column="0" SelectedValuePath="SupplierID">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Название"  Binding="{Binding Path=Title}" Width="*"/>
                         </DataGrid.Columns>
@@ -177,9 +180,9 @@
                             <TextBox x:Name="TB_Title_Type"/>
                         </StackPanel>
                         <StackPanel DockPanel.Dock="Bottom" Margin="0,5,0,0">
-                            <Button Content="Добавить" />
-                            <Button Content="Изменить запись" />
-                            <Button Content="Удалить запись"/>
+                            <Button Content="Добавить" Name="AddType" Click="AddType_Click"/>
+                            <Button Content="Изменить запись" Name="EditType" Click="EditType_Click"/>
+                            <Button Content="Удалить запись" Name="RemoveType" Click="RemoveType_Click"/>
                         </StackPanel>
                     </DockPanel>
                 </Grid>
@@ -190,7 +193,7 @@
                         <ColumnDefinition Width="7*"/>
                         <ColumnDefinition Width="2*"/>
                     </Grid.ColumnDefinitions>
-                    <DataGrid x:Name="DGR_Item" Grid.Column="0" SelectedValuePath="ItemID">
+                    <DataGrid x:Name="DGR_Unit" Grid.Column="0" SelectedValuePath="ItemID">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Полное название"  Binding="{Binding Path=Full_Title}"/>
                             <DataGridTextColumn Header="Краткое название"  Binding="{Binding Path=Short_Title}"/>
@@ -204,9 +207,9 @@
                             <TextBox x:Name="TB_TitleShort"/>
                         </StackPanel>
                         <StackPanel DockPanel.Dock="Bottom" Margin="0,5,0,0">
-                            <Button Content="Добавить"/>
-                            <Button Content="Изменить запись"/>
-                            <Button Content="Удалить запись"/>
+                            <Button Content="Добавить" Name="AddUnit" Click="AddUnit_Click"/>
+                            <Button Content="Изменить запись" Name="EditUnit" Click="EditUnit_Click"/>
+                            <Button Content="Удалить запись" Name="RemoveUnit" Click="RemoveUnit_Click"/>
                         </StackPanel>
                     </DockPanel>
                 </Grid>
@@ -234,9 +237,9 @@
                             <ComboBox x:Name="CB_Status"/>
                         </StackPanel>
                         <StackPanel DockPanel.Dock="Bottom" Margin="0,5,0,0">
-                            <Button Content="Добавить" Click="Button_Click"/>
-                            <Button Content="Изменить запись"/>
-                            <Button Content="Удалить запись"/>
+                            <Button Content="Добавить" Name="AddUser" Click="AddUser_Click"/>
+                            <Button Content="Изменить запись" Name="EditUser" Click="EditUser_Click"/>
+                            <Button Content="Удалить запись" Name="RemoveUser" Click="RemoveUser_Click"/>
                         </StackPanel>
                     </DockPanel>
                 </Grid>

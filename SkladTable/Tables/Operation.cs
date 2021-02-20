@@ -8,6 +8,7 @@ namespace SkladTable.Tables
     {
         public int OperationID { get; set; }
         public OperationStatus OperationStatus { get; set; }
+        public DateTime? Date_Of_Completion { get; set; }
         public string Document { get; set; }
         public int Number_Document { get; set; }
         public decimal Result { get; set; }
