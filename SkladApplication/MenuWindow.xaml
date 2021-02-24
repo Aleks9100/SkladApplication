@@ -58,9 +58,9 @@
                         <ColumnDefinition Width="7*"/>
                         <ColumnDefinition Width="2*"/>
                     </Grid.ColumnDefinitions>
-                    <DataGrid x:Name="DGR_Operation" Grid.Column="0" SelectedValuePath="UserID">
+                    <DataGrid x:Name="DGR_Operation" Grid.Column="0" SelectedValuePath="OperationID">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Движение"  Binding="{Binding Path=Operations}" Width="*"/>
+                            <DataGridTextColumn Header="Движение"  Binding="{Binding Path=OperationStatus}" Width="*"/>
                             <DataGridTextColumn Header="Документ"  Binding="{Binding Path=Document}" Width="*"/>
                             <DataGridTextColumn Header="Номер документа"  Binding="{Binding Path=Number_Document}" Width="*"/>
                             <DataGridTextColumn Header="Кол-во товаров"  Binding="{Binding Path=Quantity}" Width="*"/>
@@ -93,6 +93,7 @@
                             <Button Content="Добавить" Name="AddOperation" Click="AddOperation_Click"/>
                             <Button Content="Изменить запись" Name="EditOperation" Click="EditOperation_Click"/>
                             <Button Content="Удалить запись" Name="RemoveOperation" Click="RemoveOperation_Click"/>
+                            <Button Content="Отчет" Name="ReportOPeration" Click="ReportOPeration_Click"/>
                         </StackPanel>
 
                     </DockPanel>
@@ -104,12 +105,13 @@
                         <ColumnDefinition Width="7*"/>
                         <ColumnDefinition Width="2*"/>
                     </Grid.ColumnDefinitions>
-                    <DataGrid x:Name="DGR_Product" Grid.Column="0" SelectedValuePath="PositionID">
+                    <DataGrid x:Name="DGR_Product" Grid.Column="0" SelectedValuePath="ProductID">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Название"  Binding="{Binding Path=Title}" Width="*"/>
                             <DataGridTextColumn Header="Цена"  Binding="{Binding Path=Price}" Width="*"/>
+                            <DataGridTextColumn Header="Количество"  Binding="{Binding Path=Quantity}" Width="*"/>
                             <DataGridTextColumn Header="Тип товара"  Binding="{Binding Path=Product_Type.Title}" Width="*"/>
-                            <DataGridTextColumn Header="Единица измерения"  Binding="{Binding Path=Unit_of_Measurement.Short_Title}" Width="*"/>
+                            <DataGridTextColumn Header="Единица измерения"  Binding="{Binding Path=Unit_Of_Measurement.Short_Title}" Width="*"/>
                         </DataGrid.Columns>
                     </DataGrid>
                     <DockPanel Grid.Column="1">
@@ -149,9 +151,9 @@
                     <DockPanel Grid.Column="1">
                         <StackPanel DockPanel.Dock="Top">
                             <TextBlock Text="Фамилия"/>
-                            <TextBox x:Name="TB_LastNameE"/>
-                            <TextBlock Text="Имя"/>
                             <TextBox x:Name="TB_FirstNameE"/>
+                            <TextBlock Text="Имя"/>
+                            <TextBox x:Name="TB_LastNameE"/>
                             <TextBlock Text="Отчество"/>
                             <TextBox x:Name="TB_MidleNameE"/>
                         </StackPanel>
@@ -169,7 +171,7 @@
                         <ColumnDefinition Width="7*"/>
                         <ColumnDefinition Width="2*"/>
                     </Grid.ColumnDefinitions>
-                    <DataGrid x:Name="DGR_Type" Grid.Column="0" SelectedValuePath="SupplierID">
+                    <DataGrid x:Name="DGR_Type" Grid.Column="0" SelectedValuePath="Product_TypeID">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Название"  Binding="{Binding Path=Title}" Width="*"/>
                         </DataGrid.Columns>
@@ -193,7 +195,7 @@
                         <ColumnDefinition Width="7*"/>
                         <ColumnDefinition Width="2*"/>
                     </Grid.ColumnDefinitions>
-                    <DataGrid x:Name="DGR_Unit" Grid.Column="0" SelectedValuePath="ItemID">
+                    <DataGrid x:Name="DGR_Unit" Grid.Column="0" SelectedValuePath="Unit_Of_MeasurementID">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Полное название"  Binding="{Binding Path=Full_Title}"/>
                             <DataGridTextColumn Header="Краткое название"  Binding="{Binding Path=Short_Title}"/>

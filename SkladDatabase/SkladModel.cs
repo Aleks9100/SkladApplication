@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using ClosedXML.Excel;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using SkladTable;
@@ -14,8 +14,24 @@ namespace SkladDatabase
 
         public SkladModel()
         {
-            if (Database.EnsureCreated())
+            int id = 0;
+            foreach (var use in Users) { id = use.UserID; }
+            if (Database.EnsureCreated() || id == 0)
             {
+                User user = new User
+                {
+                    Login = "admin",
+                    Password = "1",
+                    Status = Status.Admin
+                };
+                User user1 = new User
+                {
+                    Login = "user",
+                    Password = "2",
+                    Status = Status.User
+                };
+                Users.AddRange(user, user1);
+                SaveChanges();
             }
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -134,13 +150,14 @@ namespace SkladDatabase
         }
         public string AddOperation(OperationStatus operations, string document, int number, int quantity, DateTime? date,int employeeID, int productID)
         {
-            try
-            {
+            //try
+            //{
                 if (count(quantity))
                 {
                     Operation operation = null;
                     if (operations == OperationStatus.Purchase)
                     {
+                    ICollection<Product> products = (ICollection<Product>)Products.Where(x => x.ProductID == productID).ToList();
                         operation = new Operation
                         {
                             OperationStatus = operations,
@@ -149,8 +166,8 @@ namespace SkladDatabase
                             Quantity = quantity,
                             Date_Of_Completion = date,
                             Result = Price_Count(Products.FirstOrDefault(x => x.ProductID == productID).Price, quantity),
-                            EmplloyeeID = employeeID,
-                            Product = (ICollection<Product>)Products.Where(x => x.ProductID == productID)
+                            EmployeeID = employeeID,
+                            Product=products
                         };
                         Products.FirstOrDefault(x => x.ProductID == productID).Quantity = +quantity;
                         SaveChanges();
@@ -166,9 +183,9 @@ namespace SkladDatabase
                                 Number_Document = number,
                                 Quantity = quantity,
                                 Result = Price_Count(Products.FirstOrDefault(x => x.ProductID == productID).Price, quantity),
-                                EmplloyeeID = employeeID,
-                                Product = (ICollection<Product>)Products.Where(x => x.ProductID == productID)
-                            };
+                                EmployeeID = employeeID,
+                                Product = (ICollection<Product>)Products.Where(x => x.ProductID == productID).ToList()
+                        };
                             Products.FirstOrDefault(x => x.ProductID == productID).Quantity = -quantity;
                             SaveChanges();
                         }
@@ -179,8 +196,8 @@ namespace SkladDatabase
                     return "Запись успешно добавлена";
                 }
                 else return "Количество равно 0 или меньше";
-            }
-            catch (Exception ex) { return ex.Message; }
+            //}
+            //catch (Exception ex) { return ex.Message; }
         }
         #endregion
         #region EditTables
@@ -275,8 +292,8 @@ namespace SkladDatabase
                     item.Number_Document = number;
                     item.Quantity = quantity;
                     item.Date_Of_Completion = date;
-                    item.EmplloyeeID = id;
-                    item.Product = (ICollection<Product>)Products.Where(x => x.ProductID == productID);
+                    item.EmployeeID = id;
+                    item.Product = (ICollection<Product>)Products.Where(x => x.ProductID == productID).ToList();
                 }
                 SaveChanges();
                 return "Запись успешно отредактирована";
@@ -333,7 +350,7 @@ namespace SkladDatabase
                 var item = Products.FirstOrDefault(x => x.ProductID == id);
                 Products.Remove(item);
                 SaveChanges();
-                return "Запись успешно отредактирована";
+                return "Запись успешно удалена";
             }
             catch (Exception ex) { return ex.Message; }
         }
@@ -344,7 +361,7 @@ namespace SkladDatabase
                 var item = Employees.FirstOrDefault(x => x.EmployeeID == id);
                 Employees.Remove(item);
                 SaveChanges();
-                return "Запись успешно отредактирована";
+                return "Запись успешно удалена";
             }
             catch (Exception ex) { return ex.Message; }
         }
@@ -355,11 +372,63 @@ namespace SkladDatabase
                 var item = Operations.FirstOrDefault(x => x.OperationID == id);
                 Operations.Remove(item);
                 SaveChanges();
-                return "Запись успешно отредактирована";
+                return "Запись успешно удалена";
             }
             catch (Exception ex) { return ex.Message; }
         }
         #endregion
+
+        #region GetAll
+        public List<User> GetAllUser() 
+        {
+            return Users.ToList();
+        }
+        public List<Employee> GetAllEmployee()
+        {
+            return Employees.ToList();
+        }
+        public List<Operation> GetAllOperation()
+        {
+            return Operations.Include(x=>x.Product).ToList();
+        }
+        public List<Product_Type> GetAllProduct_Type()
+        {
+            return Product_Types.ToList();
+        }
+        public List<Product> GetAllProduct()
+        {
+            return Products.ToList();
+        }
+        public List<Unit_Of_Measurement> GetAllUnit_Of_Measurement()
+        {
+            return Unit_Of_Measurements.ToList();
+        }
+        #endregion
+
+        public void Report(int id)
+        {
+            string dir = System.Reflection.Assembly.GetExecutingAssembly().Location.Replace(@"SkladApplication.exe", "");
+            string fileName = $@"{dir}\shablon.xlsx";
+            var workbook = new XLWorkbook(fileName);
+            var worksheet = workbook.Worksheet(1);
+            int row = 10;
+            var report = Operations.Include(x => x.Product).FirstOrDefault(i => i.OperationID == id);
+            foreach (var order in report.Product)
+            {
+                worksheet.Cell("C" + row).Value = order.Title;
+                worksheet.Cell("H" + row).Value = report.Quantity;
+                worksheet.Cell("I" + row).Value = order.Price;
+                worksheet.Cell("J" + row).Value = report.Result;
+                row++;
+            }
+            worksheet.Cell("D" + 25).Value =report.Employee.LastName;
+            worksheet.Cell("J" + 25).Value = report.Employee.LastName;
+            worksheet.Columns().AdjustToContents();
+            System.Reflection.Assembly.GetExecutingAssembly().Location.Replace(@"SkladApplication.exe", "");
+            fileName = $@"{dir}\Отчет\Отчет.xlsx";
+            workbook.SaveAs(fileName);
+            System.Diagnostics.Process.Start(fileName);
+        }
         public DbSet<User> Users { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Operation> Operations { get; set; }
