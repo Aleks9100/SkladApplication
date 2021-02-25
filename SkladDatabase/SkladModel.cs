@@ -148,56 +148,83 @@ namespace SkladDatabase
             }
             catch (Exception ex) { return ex.Message; }
         }
-        public string AddOperation(OperationStatus operations, string document, int number, int quantity, DateTime? date,int employeeID, int productID)
+        public string AddOperation(OperationStatus operations, string document, int number, List<int> quantity, DateTime? date,int employeeID, List<int> productID)
         {
-            //try
-            //{
-                if (count(quantity))
+            try
+            {
+                Operation operation = null;
+                
+                
+                if (operations == OperationStatus.Purchase)
                 {
-                    Operation operation = null;
-                    if (operations == OperationStatus.Purchase)
+                    List<Product> addProd = new List<Product>();
+                    decimal result = 0;
+                    int[] prod = new int[productID.Count];
+                    int[] qu = new int[quantity.Count];
+                    for (int i = 0; i < prod.Length; i++)
                     {
-                    ICollection<Product> products = (ICollection<Product>)Products.Where(x => x.ProductID == productID).ToList();
-                        operation = new Operation
-                        {
-                            OperationStatus = operations,
-                            Document = document,
-                            Number_Document = number,
-                            Quantity = quantity,
-                            Date_Of_Completion = date,
-                            Result = Price_Count(Products.FirstOrDefault(x => x.ProductID == productID).Price, quantity),
-                            EmployeeID = employeeID,
-                            Product=products
-                        };
-                        Products.FirstOrDefault(x => x.ProductID == productID).Quantity = +quantity;
-                        SaveChanges();
+                        foreach (var inn in quantity) { qu[i] = inn; }
+                        foreach (var inn in productID) { prod[i] = inn; }
                     }
-                    else if (operations == OperationStatus.Sale)
+                    int quantit = 0;
+                    for (int i = 0; i < prod.Length; i++)
                     {
-                        if (Products.FirstOrDefault(x => x.ProductID == productID).Quantity >= quantity)
-                        {
-                            operation = new Operation
-                            {
-                                OperationStatus = operations,
-                                Document = document,
-                                Number_Document = number,
-                                Quantity = quantity,
-                                Result = Price_Count(Products.FirstOrDefault(x => x.ProductID == productID).Price, quantity),
-                                EmployeeID = employeeID,
-                                Product = (ICollection<Product>)Products.Where(x => x.ProductID == productID).ToList()
-                        };
-                            Products.FirstOrDefault(x => x.ProductID == productID).Quantity = -quantity;
-                            SaveChanges();
-                        }
-                        else return $"На складе недостаточно товара. На складе осталось товара {Products.FirstOrDefault(x => x.ProductID == productID).Quantity}";
+                        quantit = quantit + Products.FirstOrDefault(x => x.ProductID == prod[i]).Quantity;
+                        result = result + Price_Count(Products.FirstOrDefault(x => x.ProductID == prod[i]).Price,qu[i]);
+                        addProd.Add((Product)Products.Where(x => x.ProductID == prod[i])); 
                     }
+                    operation = new Operation
+                    {
+                        OperationStatus = operations,
+                        Document = document,
+                        Number_Document = number,
+                        Quantity = quantit,
+                        Date_Of_Completion = date,
+                        Result = result,
+                        EmployeeID = employeeID,
+                        Product = addProd
+                    };
                     Operations.Add(operation);
                     SaveChanges();
-                    return "Запись успешно добавлена";
                 }
-                else return "Количество равно 0 или меньше";
-            //}
-            //catch (Exception ex) { return ex.Message; }
+                else if (operations == OperationStatus.Sale)
+                {
+                    List<Product> addProd = new List<Product>();
+                    decimal result = 0;
+                    int[] prod = new int[productID.Count];
+                    int[] qu = new int[quantity.Count];
+                    int quantit = 0;
+                    for (int i = 0; i < prod.Length; i++)
+                    {
+                        foreach (var inn in quantity) { qu[i] = inn; }
+                        foreach (var inn in productID) { prod[i] = inn; }
+                    }
+                    for (int i = 0; i < prod.Length; i++)
+                    {
+                        quantit = quantit + Products.FirstOrDefault(x => x.ProductID == prod[i]).Quantity;                     
+                        result = result + Price_Count(Products.FirstOrDefault(x => x.ProductID == prod[i]).Price, qu[i]);
+                        addProd.Add((Product)Products.Where(x => x.ProductID == prod[i]));
+                        Products.FirstOrDefault(x => x.ProductID == productID[i])
+                            .Quantity = Products.FirstOrDefault(x => x.ProductID == productID[i]).Quantity - qu[i];
+                    }
+                    operation = new Operation
+                    {
+                        OperationStatus = operations,
+                        Document = document,
+                        Number_Document = number,
+                        Quantity = quantit,
+                        Result = result,
+                        EmployeeID = employeeID,
+                        Product = addProd
+                    };                
+                    SaveChanges();
+                                              
+                    Operations.Add(operation);
+                }
+                    SaveChanges();
+                    return "Запись успешно добавлена";                              
+            }
+            catch (Exception ex) { return ex.Message; }
         }
         #endregion
         #region EditTables
@@ -281,19 +308,26 @@ namespace SkladDatabase
             }
             catch (Exception ex) { return ex.Message; }
         }
-        public string EditOperation(int id, string document, int number, int quantity,DateTime? date, int employeeID, int productID)
+        public string EditOperation(int id, string document, int number,DateTime? date, int employeeID, List<int> productID)
         {
             try
             {
+                List<Product> addProd = new List<Product>();
+                int[] prod = new int[productID.Count];
+                int quantit = 0;
+                for (int i = 0; i < prod.Length; i++)
+                {
+                    quantit = quantit + Products.FirstOrDefault(x => x.ProductID == prod[i]).Quantity;
+                    addProd.Add((Product)Products.Where(x => x.ProductID == prod[i]));
+                }
                 var item = Operations.FirstOrDefault(x => x.OperationID == id);
                 if (item != null)
                 {
                     item.Document = document;
                     item.Number_Document = number;
-                    item.Quantity = quantity;
                     item.Date_Of_Completion = date;
-                    item.EmployeeID = id;
-                    item.Product = (ICollection<Product>)Products.Where(x => x.ProductID == productID).ToList();
+                    item.EmployeeID = employeeID;
+                    item.Product = addProd;
                 }
                 SaveChanges();
                 return "Запись успешно отредактирована";
@@ -443,6 +477,11 @@ namespace SkladDatabase
         public decimal ResultCount(int id, int count)
         {
             return Products.FirstOrDefault(i=>i.ProductID == id).Price * count;
+        }
+
+        public bool qua(int q,int id) 
+        {
+            return Products.FirstOrDefault(x => x.ProductID == id).Quantity > q;
         }
         public bool count(int count) 
         {

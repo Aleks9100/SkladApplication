@@ -12,8 +12,19 @@
             <Setter Property="Width" Value="175"></Setter>
             <Setter Property="Height" Value="30"></Setter>
             <Setter Property="VerticalAlignment" Value="Center"></Setter>
-            <Setter Property="Foreground" Value="Black"/>
-            <Setter Property="Background" Value="White"></Setter>
+            <Setter Property="Foreground" Value="#00BFFF"/>
+            <Setter Property="BorderBrush" Value="Gray"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border CornerRadius="15" Width="150" Height="29" Background="White" BorderThickness="1">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center">
+
+                            </ContentPresenter>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
         <Style TargetType="TextBox">
             <Setter Property="VerticalAlignment" Value="Center"></Setter>
@@ -46,6 +57,6 @@
             <TextBlock Text="Пароль" FontSize="15"/>
             <PasswordBox x:Name="PasswordB" PasswordChar="*" Height="30" Width="200"/>
         </StackPanel>
-        <Button Foreground="#00BFFF" Content="Войти" Grid.Row="11" HorizontalAlignment="Right" Name="BtnAutorization" Click="BtnAutorization_Click"></Button>
+        <Button Content="Войти" Grid.Row="11" HorizontalAlignment="Center" Name="BtnAutorization" Click="BtnAutorization_Click"></Button>
     </Grid>
 </Window>

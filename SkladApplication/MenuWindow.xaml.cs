@@ -18,6 +18,8 @@ namespace SkladApplication
     /// </summary>
     public partial class MenuWindow : Window
     {
+        List<int> productId = new List<int>();
+        List<int> quantityProduct = new List<int>();
         public MenuWindow()
         {
             InitializeComponent();
@@ -42,7 +44,6 @@ namespace SkladApplication
                 DGR_Unit.ItemsSource = Db.GetAllUnit_Of_Measurement();
                 DGR_Type.ItemsSource = Db.GetAllProduct_Type();
                 DGR_Product.ItemsSource = Db.GetAllProduct();
-
             }
         }
         private void UpdateComboBox() 
@@ -53,6 +54,8 @@ namespace SkladApplication
                 CB_Product.ItemsSource = null;
                 CB_Product_Type.ItemsSource = null;
                 CB_Unit_Of_Measurement.ItemsSource = null;
+                CB_Oper.Items.Clear();
+                CB_Status.Items.Clear();
 
                 CB_Oper.Items.Add("Покупка");
                 CB_Oper.Items.Add("Продажа");
@@ -132,15 +135,15 @@ namespace SkladApplication
                 if (CB_Oper.SelectedItem.ToString() == "Покупка")
                 {
                     MessageBox.Show(DB.AddOperation(SkladTable.OperationStatus.Purchase, TB_Doc.Text, Convert.ToInt32(TB_NumD.Text),
-                        Convert.ToInt32(TB_Quantity.Text), DP_Date_Of_Completion.SelectedDate,
-                        Convert.ToInt32(CB_Empl.SelectedValue), Convert.ToInt32(CB_Product.SelectedValue)));
+                       quantityProduct, DP_Date_Of_Completion.SelectedDate,
+                        Convert.ToInt32(CB_Empl.SelectedValue), productId));
                 }
                 if (CB_Oper.SelectedItem.ToString() == "Продажа")
                 {
                     MessageBox.Show(DB.AddOperation(SkladTable.OperationStatus.Sale, TB_Doc.Text, Convert.ToInt32(TB_NumD.Text),
-                        Convert.ToInt32(TB_Quantity.Text), DP_Date_Of_Completion.SelectedDate,
+                        quantityProduct, DP_Date_Of_Completion.SelectedDate,
                         Convert.ToInt32(CB_Empl.SelectedValue),
-                        Convert.ToInt32(CB_Product.SelectedValue)));
+                       productId));
                 }
             }
             UpdateTable();
@@ -298,6 +301,28 @@ namespace SkladApplication
             using (var Db = new SkladModel()) 
             {
                 Db.Report(Convert.ToInt32(DGR_Operation.SelectedValue));
+            }
+        }
+
+        private void AddProductInOperation_Click(object sender, RoutedEventArgs e)
+        {
+            using (var db = new SkladModel())
+            {
+                if (db.count(Convert.ToInt32(TB_Product.Text)))
+                {
+                    if (db.qua(Convert.ToInt32(TB_Product.Text), Convert.ToInt32(CB_Product.SelectedValue)) && CB_Oper.SelectedItem.ToString() == "Продажа")
+                    {
+                        productId.Add(Convert.ToInt32(CB_Product.SelectedValue));
+                        quantityProduct.Add(Convert.ToInt32(TB_Product.Text));
+                    }
+                    else if (CB_Oper.SelectedItem.ToString() == "Покупка") 
+                    {
+                        productId.Add(Convert.ToInt32(CB_Product.SelectedValue));
+                        quantityProduct.Add(Convert.ToInt32(TB_Product.Text));
+                    }
+                    else MessageBox.Show("На складе недостаточно товара.");
+                }
+                else MessageBox.Show("Количество меньше или равно 0");
             }
         }
     }

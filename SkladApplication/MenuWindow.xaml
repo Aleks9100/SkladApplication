@@ -5,18 +5,27 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SkladApplication"
         mc:Ignorable="d"
-       Title="Menu" Height="450" Width="900" Background="#808080">
+       Title="Menu" Height="500" Width="990" Background="#808080">
     <Window.Resources>
         <Style TargetType="DockPanel">
             <Setter Property="Background" Value="#C0C0C0"/>
         </Style>
         <Style TargetType="Button">
-            <Setter Property="Background" Value="White"/>
             <Setter Property="Foreground" Value="#00BFFF"/>
             <Setter Property="BorderBrush" Value="Gray"/>
             <Setter Property="BorderThickness" Value="0, 0, 0, 0.8"/>
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
             <Setter Property="Margin" Value="0, 3, 0, 1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border CornerRadius="15" Width="180" Height="25" Background="White" BorderThickness="1">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center">
+                            </ContentPresenter>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
         <Style TargetType="DataGrid">
             <Setter Property="Margin" Value="3"/>
@@ -45,13 +54,12 @@
             <Setter Property="BorderBrush" Value="#1E90FF"/>
         </Style>
         <Style TargetType="DataGridRow">
-            <Setter Property="Background" Value="#808080"/>
             <Setter Property="BorderBrush" Value="#1E90FF"/>
             <Setter Property="BorderThickness" Value="0,0,0,0.8"/>
         </Style>
     </Window.Resources>
     <Grid>
-        <TabControl TabStripPlacement="Left" HorizontalAlignment="Center" Height="399" VerticalAlignment="Top" Width="870" Margin="10,10,10,0">
+        <TabControl TabStripPlacement="Left" HorizontalAlignment="Center" Height="450" VerticalAlignment="Top" Width="970" Margin="10,10,10,0">
             <TabItem Header="Операции">
                 <Grid Background="#C0C0C0">
                     <Grid.ColumnDefinitions>
@@ -67,7 +75,6 @@
                             <DataGridTextColumn Header="Дата" Binding="{Binding Path=Date_Of_Completion}" Width="*"/>
                             <DataGridTextColumn Header="Итоговая цена"  Binding="{Binding Path=Result}" Width="*"/>
                             <DataGridTextColumn Header="Сотрудник"  Binding="{Binding Path=Employee.LastName}" Width="*"/>
-                            <DataGridTextColumn Header="Товар"  Binding="{Binding Path=Product.Title}" Width="*"/>
                         </DataGrid.Columns>
                     </DataGrid>
                     <DockPanel Background="#C0C0C0" Grid.Column="1">
@@ -75,7 +82,10 @@
                             <TextBlock Text="Движение"/>
                             <ComboBox x:Name="CB_Oper"/>
                             <TextBlock Text="Товар"/>
-                            <ComboBox x:Name="CB_Product" SelectedValuePath="ProductID" DisplayMemberPath="Title"/>
+                            <ComboBox Name="CB_Product" DisplayMemberPath="Title" SelectedValuePath="ProductID"/>
+                            <TextBlock Text="Количество товара"/>
+                            <TextBox Name="TB_Product"/>
+                            <Button Name="AddProductInOperation" Content="Добавить товары в операцию" Click="AddProductInOperation_Click"/>
                             <TextBlock Text="Документ"/>
                             <TextBox x:Name="TB_Doc"/>
                             <TextBlock Text="Номер документа"/>

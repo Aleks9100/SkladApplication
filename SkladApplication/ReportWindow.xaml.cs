@@ -21,5 +21,15 @@ namespace SkladApplication
         {
             InitializeComponent();
         }
+
+        private void Btn_Report_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Btn_Back_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
