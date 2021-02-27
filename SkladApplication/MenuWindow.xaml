@@ -153,8 +153,8 @@
                     </Grid.ColumnDefinitions>
                     <DataGrid x:Name="DGR_Employee" Grid.Column="0" SelectedValuePath="EmployeeID">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Фамилия"  Binding="{Binding Path=FirstName}" Width="*"/>
-                            <DataGridTextColumn Header="Имя"  Binding="{Binding Path=LastName}" Width="*"/>
+                            <DataGridTextColumn Header="Фамилия"  Binding="{Binding Path=LastName}" Width="*"/>
+                            <DataGridTextColumn Header="Имя"  Binding="{Binding Path=FirstName}" Width="*"/>
                             <DataGridTextColumn Header="Отчество"  Binding="{Binding Path=MiddleName}" Width="*"/>
                         </DataGrid.Columns>
                     </DataGrid>

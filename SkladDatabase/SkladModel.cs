@@ -379,16 +379,20 @@ namespace SkladDatabase
 
         public void Report(int id)
         {
-            string dir = System.Reflection.Assembly.GetExecutingAssembly().Location.Replace(@"SkladApplication.exe", "");
+            string dir = System.Reflection.Assembly.GetExecutingAssembly().Location.Replace(@"SkladDatabase.dll", "");
             string fileName = $@"{dir}\shablon.xlsx";
             var workbook = new XLWorkbook(fileName);
+            workbook.AddWorksheet();
             var worksheet = workbook.Worksheet(1);
             int row = 10;
-            var report = Operations.Include(x => x.Product).FirstOrDefault(i => i.OperationID == id);
+            var report = Operations
+                .Include(x => x.Product)
+                .Include(x => x.Employee)
+                .FirstOrDefault(i => i.OperationID == id);
             foreach (var order in report.Product)
             {
                 worksheet.Cell("C" + row).Value = order.Title;
-                worksheet.Cell("H" + row).Value = report.Quantity;
+                 worksheet.Cell("H" + row).Value = report.Quantity;
                 worksheet.Cell("I" + row).Value = order.Price;
                 worksheet.Cell("J" + row).Value = report.Result;
                 row++;
@@ -396,10 +400,11 @@ namespace SkladDatabase
             worksheet.Cell("D" + 25).Value =report.Employee.LastName;
             worksheet.Cell("J" + 25).Value = report.Employee.LastName;
             worksheet.Columns().AdjustToContents();
-            System.Reflection.Assembly.GetExecutingAssembly().Location.Replace(@"SkladApplication.exe", "");
+            System.Reflection.Assembly.GetExecutingAssembly().Location.Replace(@"SkladApplication.dll", "");
             fileName = $@"{dir}\Отчет\Отчет.xlsx";
             workbook.SaveAs(fileName);
-            System.Diagnostics.Process.Start(fileName);
+            //тут сам разбирайся
+            //System.Diagnostics.Process.Start(fileName);
         }
 
         public DbSet<User> Users { get; set; }
