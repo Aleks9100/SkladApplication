@@ -61,24 +61,12 @@ namespace SkladDatabase
             try
             {
                 User user = null;
-                if (status == Status.Admin)
+                user = new User
                 {
-                    user = new User
-                    {
-                        Login = login,
-                        Password = passsword,
-                        Status = Status.Admin
-                    };
-                }
-                else if (status == Status.User)
-                {
-                    user = new User
-                    {
-                        Login = login,
-                        Password = passsword,
-                        Status = Status.User
-                    };
-                }
+                    Login = login,
+                    Password = passsword,
+                    Status = status
+                };
                 Users.Add(user);
                 SaveChanges();
                 return "Запись успешно добавлена";
@@ -87,16 +75,16 @@ namespace SkladDatabase
         }
         public string AddUnit_Of_Measurement(string full_name, string short_name)
         {
-            try 
-            { 
-            Unit_Of_Measurement unit_Of_ = new Unit_Of_Measurement
+            try
             {
-                Full_Title = full_name,
-                Short_Title = short_name
-            };
-            Unit_Of_Measurements.Add(unit_Of_);
-            SaveChanges();
-            return "Запись успешно добавлена";
+                Unit_Of_Measurement unit_Of_ = new Unit_Of_Measurement
+                {
+                    Full_Title = full_name,
+                    Short_Title = short_name
+                };
+                Unit_Of_Measurements.Add(unit_Of_);
+                SaveChanges();
+                return "Запись успешно добавлена";
             }
             catch (Exception ex) { return ex.Message; }
         }
@@ -153,76 +141,43 @@ namespace SkladDatabase
             try
             {
                 Operation operation = null;
-                
-                
-                if (operations == OperationStatus.Purchase)
+                List<Product> addProd = new List<Product>();
+                decimal result = 0;
+                int[] prod = new int[productID.Count];
+                int[] qu = new int[quantity.Count];
+                for (int i = 0; i < prod.Length; i++)
                 {
-                    List<Product> addProd = new List<Product>();
-                    decimal result = 0;
-                    int[] prod = new int[productID.Count];
-                    int[] qu = new int[quantity.Count];
-                    for (int i = 0; i < prod.Length; i++)
-                    {
-                        foreach (var inn in quantity) { qu[i] = inn; }
-                        foreach (var inn in productID) { prod[i] = inn; }
-                    }
-                    int quantit = 0;
-                    for (int i = 0; i < prod.Length; i++)
-                    {
-                        quantit = quantit + Products.FirstOrDefault(x => x.ProductID == prod[i]).Quantity;
-                        result = result + Price_Count(Products.FirstOrDefault(x => x.ProductID == prod[i]).Price,qu[i]);
-                        addProd.Add((Product)Products.Where(x => x.ProductID == prod[i])); 
-                    }
-                    operation = new Operation
-                    {
-                        OperationStatus = operations,
-                        Document = document,
-                        Number_Document = number,
-                        Quantity = quantit,
-                        Date_Of_Completion = date,
-                        Result = result,
-                        EmployeeID = employeeID,
-                        Product = addProd
-                    };
-                    Operations.Add(operation);
-                    SaveChanges();
+                    foreach (var inn in quantity) { qu[i] = inn; }
+                    foreach (var inn in productID) { prod[i] = inn; }
                 }
-                else if (operations == OperationStatus.Sale)
+                int quantit = 0;
+                for (int i = 0; i < prod.Length; i++)
                 {
-                    List<Product> addProd = new List<Product>();
-                    decimal result = 0;
-                    int[] prod = new int[productID.Count];
-                    int[] qu = new int[quantity.Count];
-                    int quantit = 0;
-                    for (int i = 0; i < prod.Length; i++)
+                    quantit = quantit + Products.FirstOrDefault(x => x.ProductID == prod[i]).Quantity;
+                    result = result + Price_Count(Products.FirstOrDefault(x => x.ProductID == prod[i]).Price, qu[i]);
+                    addProd.Add((Product)Products.Where(x => x.ProductID == prod[i]));
+                    if (operations == OperationStatus.Sale)
                     {
-                        foreach (var inn in quantity) { qu[i] = inn; }
-                        foreach (var inn in productID) { prod[i] = inn; }
+                        Products
+                            .FirstOrDefault(x => x.ProductID == productID[i])
+                            .Quantity = Products.FirstOrDefault(x => x.ProductID == productID[i])
+                            .Quantity - qu[i];
                     }
-                    for (int i = 0; i < prod.Length; i++)
-                    {
-                        quantit = quantit + Products.FirstOrDefault(x => x.ProductID == prod[i]).Quantity;                     
-                        result = result + Price_Count(Products.FirstOrDefault(x => x.ProductID == prod[i]).Price, qu[i]);
-                        addProd.Add((Product)Products.Where(x => x.ProductID == prod[i]));
-                        Products.FirstOrDefault(x => x.ProductID == productID[i])
-                            .Quantity = Products.FirstOrDefault(x => x.ProductID == productID[i]).Quantity - qu[i];
-                    }
-                    operation = new Operation
-                    {
-                        OperationStatus = operations,
-                        Document = document,
-                        Number_Document = number,
-                        Quantity = quantit,
-                        Result = result,
-                        EmployeeID = employeeID,
-                        Product = addProd
-                    };                
-                    SaveChanges();
-                                              
-                    Operations.Add(operation);
                 }
-                    SaveChanges();
-                    return "Запись успешно добавлена";                              
+                operation = new Operation
+                {
+                    OperationStatus = operations,
+                    Document = document,
+                    Number_Document = number,
+                    Quantity = quantit,
+                    Date_Of_Completion = date,
+                    Result = result,
+                    EmployeeID = employeeID,
+                    Product = addProd
+                };
+                Operations.Add(operation);
+                SaveChanges();
+                return "Запись успешно добавлена";                              
             }
             catch (Exception ex) { return ex.Message; }
         }
@@ -308,32 +263,32 @@ namespace SkladDatabase
             }
             catch (Exception ex) { return ex.Message; }
         }
-        public string EditOperation(int id, string document, int number,DateTime? date, int employeeID, List<int> productID)
-        {
-            try
-            {
-                List<Product> addProd = new List<Product>();
-                int[] prod = new int[productID.Count];
-                int quantit = 0;
-                for (int i = 0; i < prod.Length; i++)
-                {
-                    quantit = quantit + Products.FirstOrDefault(x => x.ProductID == prod[i]).Quantity;
-                    addProd.Add((Product)Products.Where(x => x.ProductID == prod[i]));
-                }
-                var item = Operations.FirstOrDefault(x => x.OperationID == id);
-                if (item != null)
-                {
-                    item.Document = document;
-                    item.Number_Document = number;
-                    item.Date_Of_Completion = date;
-                    item.EmployeeID = employeeID;
-                    item.Product = addProd;
-                }
-                SaveChanges();
-                return "Запись успешно отредактирована";
-            }
-            catch (Exception ex) { return ex.Message; }
-        }
+        //public string EditOperation(int id, string document, int number,DateTime? date, int employeeID, List<int> productID)
+        //{
+        //    try
+        //    {
+        //        List<Product> addProd = new List<Product>();
+        //        int[] prod = new int[productID.Count];
+        //        int quantit = 0;
+        //        for (int i = 0; i < prod.Length; i++)
+        //        {
+        //            quantit = quantit + Products.FirstOrDefault(x => x.ProductID == prod[i]).Quantity;
+        //            addProd.Add((Product)Products.Where(x => x.ProductID == prod[i]));
+        //        }
+        //        var item = Operations.FirstOrDefault(x => x.OperationID == id);
+        //        if (item != null)
+        //        {
+        //            item.Document = document;
+        //            item.Number_Document = number;
+        //            item.Date_Of_Completion = date;
+        //            item.EmployeeID = employeeID;
+        //            item.Product = addProd;
+        //        }
+        //        SaveChanges();
+        //        return "Запись успешно отредактирована";
+        //    }
+        //    catch (Exception ex) { return ex.Message; }
+        //}
         #endregion
         #region RemoveTables
         public string RemoveUser(int id)
@@ -413,30 +368,13 @@ namespace SkladDatabase
         #endregion
 
         #region GetAll
-        public List<User> GetAllUser() 
-        {
-            return Users.ToList();
-        }
-        public List<Employee> GetAllEmployee()
-        {
-            return Employees.ToList();
-        }
-        public List<Operation> GetAllOperation()
-        {
-            return Operations.Include(x=>x.Product).ToList();
-        }
-        public List<Product_Type> GetAllProduct_Type()
-        {
-            return Product_Types.ToList();
-        }
-        public List<Product> GetAllProduct()
-        {
-            return Products.ToList();
-        }
-        public List<Unit_Of_Measurement> GetAllUnit_Of_Measurement()
-        {
-            return Unit_Of_Measurements.ToList();
-        }
+        public List<User> GetAllUser() => Users.ToList();
+        
+        public List<Employee> GetAllEmployee() => Employees.ToList();
+        public List<Operation> GetAllOperation() => Operations.Include(x=>x.Product).ToList();
+        public List<Product_Type> GetAllProduct_Type() => Product_Types.ToList();
+        public List<Product> GetAllProduct() => Products.ToList();
+        public List<Unit_Of_Measurement> GetAllUnit_Of_Measurement() => Unit_Of_Measurements.ToList();
         #endregion
 
         public void Report(int id)
@@ -463,29 +401,19 @@ namespace SkladDatabase
             workbook.SaveAs(fileName);
             System.Diagnostics.Process.Start(fileName);
         }
+
         public DbSet<User> Users { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Operation> Operations { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Product_Type> Product_Types { get; set; }
         public DbSet<Unit_Of_Measurement> Unit_Of_Measurements { get; set; }
-        public decimal Price_Count(decimal price, int count)
-        {
-            return price * count;
-        }
 
-        public decimal ResultCount(int id, int count)
-        {
-            return Products.FirstOrDefault(i=>i.ProductID == id).Price * count;
-        }
+        public decimal Price_Count(decimal price, int count) => price * count;
 
-        public bool qua(int q,int id) 
-        {
-            return Products.FirstOrDefault(x => x.ProductID == id).Quantity > q;
-        }
-        public bool count(int count) 
-        {
-            return count > 0;
-        }     
+        public decimal ResultCount(int id, int count) =>Products.FirstOrDefault(i=>i.ProductID == id).Price * count;
+
+        public bool qua(int q,int id) => Products.FirstOrDefault(x => x.ProductID == id).Quantity > q;
+        public bool count(int count) => count > 0;   
     }
 }

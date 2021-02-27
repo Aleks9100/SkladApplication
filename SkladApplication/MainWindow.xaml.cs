@@ -24,29 +24,24 @@ namespace SkladApplication
         public MainWindow()
         {
             InitializeComponent();
-
         }
 
         private void BtnAutorization_Click(object sender, RoutedEventArgs e)
         {
-            bool key = false;
             using (var Db = new SkladModel()) 
             {
-                var user = Db.Users.Where(l => l.Login == TB_Log.Text && l.Password == PasswordB.Password);
-                if ( user != null) 
+                var user = Db.Users.FirstOrDefault(l => l.Login == TB_Log.Text && l.Password == PasswordB.Password);
+                if (user is null)
                 {
-                    foreach (var us in user) 
-                    {
-                        if (us.Status == SkladTable.Status.Admin) 
-                        {
-                            key = true;
-                            (new MenuWindow()).Show();
-                            this.Close();
-                        }
-                    }
+                    MessageBox.Show("Неверный логин или пароль");
+                    return;
+                } 
+                if (user.Status == SkladTable.Status.Admin)
+                {
+                    (new MenuWindow()).Show();
+                    this.Close();
                 }
             }
-            if (key == false) MessageBox.Show("Неверный логин или пароль");
         }
     }
 }

@@ -208,15 +208,15 @@ namespace SkladApplication
         }
         private void EditOperation_Click(object sender, RoutedEventArgs e)
         {
-            using (var DB = new SkladModel())
-            {
-                MessageBox.Show(DB.EditOperation(Convert.ToInt32(DGR_Operation.SelectedValue), TB_Doc.Text, Convert.ToInt32(TB_NumD.Text),
-                    Convert.ToInt32(TB_Quantity.Text), DP_Date_Of_Completion.SelectedDate,
-                    Convert.ToInt32(CB_Empl.SelectedValue),
-                    Convert.ToInt32(CB_Product.SelectedValue)));
-            }
-            UpdateTable();
-            UpdateComboBox();
+            //using (var DB = new SkladModel())
+            //{
+            //    MessageBox.Show(DB.EditOperation(Convert.ToInt32(DGR_Operation.SelectedValue), TB_Doc.Text, Convert.ToInt32(TB_NumD.Text),
+            //         DP_Date_Of_Completion.SelectedDate,
+            //        Convert.ToInt32(CB_Empl.SelectedValue),
+            //        quantityProduct));
+            //}
+            //UpdateTable();
+            //UpdateComboBox();
         }
         #endregion
 
@@ -298,10 +298,8 @@ namespace SkladApplication
         }
         private void ReportOPeration_Click(object sender, RoutedEventArgs e)
         {
-            using (var Db = new SkladModel()) 
-            {
-                Db.Report(Convert.ToInt32(DGR_Operation.SelectedValue));
-            }
+            (new ReportWindow((Convert.ToInt32(DGR_Operation.SelectedValue)))).Show();
+            this.Close();
         }
 
         private void AddProductInOperation_Click(object sender, RoutedEventArgs e)

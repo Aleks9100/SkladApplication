@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SkladApplication"
         mc:Ignorable="d"
-       Title="Menu" Height="500" Width="990" Background="#808080">
+       Title="Menu" Height="550" Width="990" Background="#808080">
     <Window.Resources>
         <Style TargetType="DockPanel">
             <Setter Property="Background" Value="#C0C0C0"/>
@@ -59,7 +59,7 @@
         </Style>
     </Window.Resources>
     <Grid>
-        <TabControl TabStripPlacement="Left" HorizontalAlignment="Center" Height="450" VerticalAlignment="Top" Width="970" Margin="10,10,10,0">
+        <TabControl TabStripPlacement="Left" HorizontalAlignment="Center" Height="500" VerticalAlignment="Top" Width="970" Margin="10,10,10,0">
             <TabItem Header="Операции">
                 <Grid Background="#C0C0C0">
                     <Grid.ColumnDefinitions>

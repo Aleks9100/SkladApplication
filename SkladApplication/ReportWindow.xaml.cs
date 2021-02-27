@@ -8,6 +8,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using SkladDatabase; 
 using System.Windows.Shapes;
 
 namespace SkladApplication
@@ -17,14 +18,23 @@ namespace SkladApplication
     /// </summary>
     public partial class ReportWindow : Window
     {
+        int id = 0;
         public ReportWindow()
         {
             InitializeComponent();
         }
+        public ReportWindow(int id)
+        {
+            InitializeComponent();
+            this.id = id;
+        }
 
         private void Btn_Report_Click(object sender, RoutedEventArgs e)
         {
-
+            using (var Db = new SkladModel()) 
+            {
+                Db.Report(id);
+            }
         }
 
         private void Btn_Back_Click(object sender, RoutedEventArgs e)
