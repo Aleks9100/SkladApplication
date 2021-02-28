@@ -306,17 +306,17 @@ namespace SkladApplication
         {
             using (var db = new SkladModel())
             {
-                if (db.count(Convert.ToInt32(TB_Product.Text)))
+                if (db.count(Convert.ToInt32(TB_Q.Text)))
                 {
-                    if (db.qua(Convert.ToInt32(TB_Product.Text), Convert.ToInt32(CB_Product.SelectedValue)) && CB_Oper.SelectedItem.ToString() == "Продажа")
+                    if (db.qua(Convert.ToInt32(TB_Q.Text), Convert.ToInt32(CB_Product.SelectedValue)) && CB_Oper.SelectedItem.ToString() == "Продажа")
                     {
                         productId.Add(Convert.ToInt32(CB_Product.SelectedValue));
-                        quantityProduct.Add(Convert.ToInt32(TB_Product.Text));
+                        quantityProduct.Add(Convert.ToInt32(TB_Q.Text));
                     }
                     else if (CB_Oper.SelectedItem.ToString() == "Покупка") 
                     {
                         productId.Add(Convert.ToInt32(CB_Product.SelectedValue));
-                        quantityProduct.Add(Convert.ToInt32(TB_Product.Text));
+                        quantityProduct.Add(Convert.ToInt32(TB_Q.Text));
                     }
                     else MessageBox.Show("На складе недостаточно товара.");
                 }

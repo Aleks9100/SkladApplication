@@ -39,7 +39,8 @@ namespace SkladApplication
 
         private void Btn_Back_Click(object sender, RoutedEventArgs e)
         {
-
+            (new MenuWindow()).Show();
+            this.Close();
         }
     }
 }

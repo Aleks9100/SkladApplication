@@ -84,7 +84,7 @@
                             <TextBlock Text="Товар"/>
                             <ComboBox Name="CB_Product" DisplayMemberPath="Title" SelectedValuePath="ProductID"/>
                             <TextBlock Text="Количество товара"/>
-                            <TextBox Name="TB_Product"/>
+                            <TextBox Name="TB_Q"/>
                             <Button Name="AddProductInOperation" Content="Добавить товары в операцию" Click="AddProductInOperation_Click"/>
                             <TextBlock Text="Документ"/>
                             <TextBox x:Name="TB_Doc"/>
