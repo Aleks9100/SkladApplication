@@ -39,14 +39,11 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="10"/>
         </Grid.ColumnDefinitions>
-        <DataGrid x:Name="DGR_Operation" Grid.Row="1" Grid.Column="1" SelectedValuePath="OperationID">
+        <DataGrid x:Name="DGR_Product" Grid.Row="1" Grid.Column="1" SelectedValuePath="OperationID">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Движение"  Binding="{Binding Path=Operations}" Width="*"/>
-                <DataGridTextColumn Header="Документ"  Binding="{Binding Path=Document}" Width="*"/>
-                <DataGridTextColumn Header="Номер документа"  Binding="{Binding Path=Number_Document}" Width="*"/>
-                <DataGridTextColumn Header="Кол-во товаров"  Binding="{Binding Path=Quantity}" Width="*"/>
-                <DataGridTextColumn Header="Итоговая цена"  Binding="{Binding Path=Result}" Width="*"/>
-                <DataGridTextColumn Header="Сотрудник"  Binding="{Binding Path=Employee.LastName}" Width="*"/>
+                <DataGridTextColumn Header="Название"  Binding="{Binding Path=Title}" Width="*"/>
+                <DataGridTextColumn Header="Цена"  Binding="{Binding Path=Price}" Width="*"/>
+                <DataGridTextColumn Header="Тип продукта"  Binding="{Binding Path=Product_Type.Title}" Width="*"/>
             </DataGrid.Columns>
         </DataGrid>
         <Button x:Name="Btn_Report" Content="Печать" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" Click="Btn_Report_Click"/>

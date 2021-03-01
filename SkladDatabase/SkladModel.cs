@@ -419,6 +419,12 @@ namespace SkladDatabase
         public decimal ResultCount(int id, int count) =>Products.FirstOrDefault(i=>i.ProductID == id).Price * count;
 
         public bool qua(int q,int id) => Products.FirstOrDefault(x => x.ProductID == id).Quantity > q;
-        public bool count(int count) => count > 0;   
+        public bool count(int count) => count > 0;
+
+        public List<Product> GetOperationProduct(int id) 
+        {
+            var operation = Operations.FirstOrDefault(x => x.OperationID == id);
+            return operation.Product.ToList();
+        }
     }
 }
