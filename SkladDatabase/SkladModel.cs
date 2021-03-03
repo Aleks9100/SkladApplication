@@ -138,42 +138,41 @@ namespace SkladDatabase
         }
         public string AddOperation(OperationStatus operations, string document, int number, List<int> quantity, DateTime? date,int employeeID, List<int> productID)
         {
-            //try
-            //{
-                Operation operation = null;
-                List<Product> addProd = new List<Product>();
-                decimal result = 0;
-                int quantit = 0;
-                for (int i = 0; i < productID.Count; i++)
-                {
-                    quantit = quantit + Products.FirstOrDefault(x => x.ProductID == prod[i]).Quantity;
-                    result = result + Price_Count(Products.FirstOrDefault(x => x.ProductID == prod[i]).Price, qu[i]);
-                    addProd.Add((Product)Products.Where(x => x.ProductID == prod[i]));
-                    if (operations == OperationStatus.Sale)
-                    {
-                        Products
-                            .FirstOrDefault(x => x.ProductID == productID[i])
-                            .Quantity = Products.FirstOrDefault(x => x.ProductID == productID[i])
-                            .Quantity - quantity[i];
-                    }
-                }
-                operation = new Operation
-                {
-                    OperationStatus = operations,
-                    Document = document,
-                    Number_Document = number,
-                    Quantity = quantit,
-                    Date_Of_Completion = date,
-                    Result = result,
-                    EmployeeID = employeeID,
-                    Product = addProd
-                };
+            try
+            {
+            Operation operation = null;
+            List<Product> addProd = new List<Product>();
+            decimal result = 0;                
+            int quantit = 0;
+            
+            for (int i = 0; i < productID.Count; i++)
+            {
+                var sale = Products.FirstOrDefault(x => x.ProductID == productID[i]);
+                quantit = quantit + Products.FirstOrDefault(x => x.ProductID == productID[i]).Quantity;
+                result = result + Price_Count(Products.FirstOrDefault(x => x.ProductID == productID[i]).Price, quantity[i]);
+                addProd.Add(Products.FirstOrDefault(x => x.ProductID == productID[i]));
+                if (operations == OperationStatus.Sale)
+                    sale.Quantity -= quantity[i];
+                else if (operations == OperationStatus.Purchase)
+                    sale.Quantity += quantity[i];
+            }
+            operation = new Operation
+            {
+                OperationStatus = operations,
+                Document = document,
+                Number_Document = number,
+                Quantity = quantit,
+                Date_Of_Completion = date,
+                Result = result,
+                EmployeeID = employeeID,
+                Product = addProd
+            };
                 Operations.Add(operation);
                 SaveChanges();
-                return "Запись успешно добавлена";                              
-            //}
-            //catch (Exception ex) { return ex.Message; }
+                return "Запись успешно добавлена";
         }
+            catch (Exception ex) { return ex.Message; }
+}
         #endregion
         #region EditTables
         public string EditUser(int id,string login, string passsword, Status status)
@@ -390,16 +389,19 @@ namespace SkladDatabase
                 .Include(x => x.Product)
                 .Include(x => x.Employee)
                 .FirstOrDefault(i => i.OperationID == id);
+            int count = 1 ;         
             foreach (var order in report.Product)
             {
                 worksheet.Cell("C" + row).Value = order.Title;
-                 worksheet.Cell("H" + row).Value = report.Quantity;
+                worksheet.Cell("H" + row).Value = report.Quantity;
                 worksheet.Cell("I" + row).Value = order.Price;
                 worksheet.Cell("J" + row).Value = report.Result;
-                row++;
+                count++;              
+                row++;               
             }
             worksheet.Cell("D" + 25).Value =report.Employee.LastName;
             worksheet.Cell("J" + 25).Value = report.Employee.LastName;
+            worksheet.Cell("J" + 5).Value = report.Date_Of_Completion;
             worksheet.Columns().AdjustToContents();
             System.Reflection.Assembly.GetExecutingAssembly().Location.Replace(@"SkladApplication.dll", "");
             fileName = $@"{dir}\Отчет\Отчет.xlsx";
@@ -426,6 +428,6 @@ namespace SkladDatabase
         {
             var operation = Operations.Include(x=>x.Product).FirstOrDefault(x => x.OperationID == id);
             return operation.Product.ToList();
-        }
+        }      
     }
 }
