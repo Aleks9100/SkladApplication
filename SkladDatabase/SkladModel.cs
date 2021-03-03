@@ -359,9 +359,17 @@ namespace SkladDatabase
             try
             {
                 var item = Operations.FirstOrDefault(x => x.OperationID == id);
-                Operations.Remove(item);
-                SaveChanges();
-                return "Запись успешно удалена";
+                //DateTime date = DateTime.Now;
+                //DateTime time = (DateTime)item.Date_Of_Completion;
+                //int count = date.Year - time.Year;
+                if (item.Date_Of_Completion < DateTime.Now.AddYears(-1))
+                {
+
+                    Operations.Remove(item);
+                    SaveChanges();
+                    return "Запись успешно удалена";
+                }
+                else return "Невозможно удалить операцию так как операция существует меньше года";
             }
             catch (Exception ex) { return ex.Message; }
         }
