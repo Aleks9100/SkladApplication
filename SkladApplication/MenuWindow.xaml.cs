@@ -279,11 +279,15 @@ namespace SkladApplication
 
         private void TB_Quantity_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if(CB_Product.SelectedValue != null) 
-            { }
-            using (var DB = new SkladModel())
+            if (CB_Product.SelectedValue != null)
             {
-                TB_Result.Text = DB.ResultCount(Convert.ToInt32(CB_Product.SelectedValue), Convert.ToInt32(TB_Quantity.Text)).ToString();
+                using (var DB = new SkladModel())
+                {
+                    decimal count = 0;
+                      count = count+ DB.ResultCount(Convert.ToInt32(CB_Product.SelectedValue), 
+                        Convert.ToInt32(TB_Quantity.Text));
+                    TB_Result.Text = Convert.ToString(count);
+                }
             }
         }
         private void CB_Empl_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -306,17 +310,17 @@ namespace SkladApplication
         {
             using (var db = new SkladModel())
             {
-                if (db.count(Convert.ToInt32(TB_Q.Text)))
+                if (db.count(Convert.ToInt32(TB_Quantity.Text)))
                 {
-                    if (db.qua(Convert.ToInt32(TB_Q.Text), Convert.ToInt32(CB_Product.SelectedValue)) && CB_Oper.SelectedItem.ToString() == "Продажа")
+                    if (db.qua(Convert.ToInt32(TB_Quantity.Text), Convert.ToInt32(CB_Product.SelectedValue)) && CB_Oper.SelectedItem.ToString() == "Продажа")
                     {
                         productId.Add(Convert.ToInt32(CB_Product.SelectedValue));
-                        quantityProduct.Add(Convert.ToInt32(TB_Q.Text));
+                        quantityProduct.Add(Convert.ToInt32(TB_Quantity.Text));
                     }
                     else if (CB_Oper.SelectedItem.ToString() == "Покупка") 
                     {
                         productId.Add(Convert.ToInt32(CB_Product.SelectedValue));
-                        quantityProduct.Add(Convert.ToInt32(TB_Q.Text));
+                        quantityProduct.Add(Convert.ToInt32(TB_Quantity.Text));
                     }
                     else MessageBox.Show("На складе недостаточно товара.");
                 }

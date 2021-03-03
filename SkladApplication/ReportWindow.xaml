@@ -39,7 +39,7 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="10"/>
         </Grid.ColumnDefinitions>
-        <DataGrid x:Name="DGR_Product" Grid.Row="1" Grid.Column="1" SelectedValuePath="OperationID">
+        <DataGrid x:Name="DGR_Product" Grid.Row="1" Grid.Column="1" AutoGenerateColumns="False" SelectedValuePath="OperationID">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Название"  Binding="{Binding Path=Title}" Width="*"/>
                 <DataGridTextColumn Header="Цена"  Binding="{Binding Path=Price}" Width="*"/>

@@ -84,14 +84,12 @@
                             <TextBlock Text="Товар"/>
                             <ComboBox Name="CB_Product" DisplayMemberPath="Title" SelectedValuePath="ProductID"/>
                             <TextBlock Text="Количество товара"/>
-                            <TextBox Name="TB_Q"/>
+                            <TextBox x:Name="TB_Quantity" TextChanged="TB_Quantity_TextChanged"/>
                             <Button Name="AddProductInOperation" Content="Добавить товары в операцию" Click="AddProductInOperation_Click"/>
                             <TextBlock Text="Документ"/>
                             <TextBox x:Name="TB_Doc"/>
                             <TextBlock Text="Номер документа"/>
                             <TextBox x:Name="TB_NumD"/>
-                            <TextBlock Text="Кол-во товаров"/>
-                            <TextBox x:Name="TB_Quantity" TextChanged="TB_Quantity_TextChanged"/>
                             <TextBlock Text="Дата"/>
                             <DatePicker x:Name="DP_Date_Of_Completion"/>
                             <TextBlock Text="Итоговая цена"/>

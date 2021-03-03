@@ -138,8 +138,8 @@ namespace SkladDatabase
         }
         public string AddOperation(OperationStatus operations, string document, int number, List<int> quantity, DateTime? date,int employeeID, List<int> productID)
         {
-            try
-            {
+            //try
+            //{
                 Operation operation = null;
                 List<Product> addProd = new List<Product>();
                 decimal result = 0;
@@ -155,7 +155,7 @@ namespace SkladDatabase
                 {
                     quantit = quantit + Products.FirstOrDefault(x => x.ProductID == prod[i]).Quantity;
                     result = result + Price_Count(Products.FirstOrDefault(x => x.ProductID == prod[i]).Price, qu[i]);
-                    addProd.Add((Product)Products.Where(x => x.ProductID == prod[i]));
+                    addProd.Add(Products.Where(x => x.ProductID == prod[i]).FirstOrDefault());
                     if (operations == OperationStatus.Sale)
                     {
                         Products
@@ -178,8 +178,8 @@ namespace SkladDatabase
                 Operations.Add(operation);
                 SaveChanges();
                 return "Запись успешно добавлена";                              
-            }
-            catch (Exception ex) { return ex.Message; }
+            //}
+            //catch (Exception ex) { return ex.Message; }
         }
         #endregion
         #region EditTables
@@ -423,7 +423,7 @@ namespace SkladDatabase
 
         public List<Product> GetOperationProduct(int id) 
         {
-            var operation = Operations.FirstOrDefault(x => x.OperationID == id);
+            var operation = Operations.Include(x=>x.Product).FirstOrDefault(x => x.OperationID == id);
             return operation.Product.ToList();
         }
     }
