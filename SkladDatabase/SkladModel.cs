@@ -143,25 +143,18 @@ namespace SkladDatabase
                 Operation operation = null;
                 List<Product> addProd = new List<Product>();
                 decimal result = 0;
-                int[] prod = new int[productID.Count];
-                int[] qu = new int[quantity.Count];
-                for (int i = 0; i < prod.Length; i++)
-                {
-                    foreach (var inn in quantity) { qu[i] = inn; }
-                    foreach (var inn in productID) { prod[i] = inn; }
-                }
                 int quantit = 0;
-                for (int i = 0; i < prod.Length; i++)
+                for (int i = 0; i < productID.Count; i++)
                 {
                     quantit = quantit + Products.FirstOrDefault(x => x.ProductID == prod[i]).Quantity;
                     result = result + Price_Count(Products.FirstOrDefault(x => x.ProductID == prod[i]).Price, qu[i]);
-                    addProd.Add(Products.Where(x => x.ProductID == prod[i]).FirstOrDefault());
+                    addProd.Add((Product)Products.Where(x => x.ProductID == prod[i]));
                     if (operations == OperationStatus.Sale)
                     {
                         Products
                             .FirstOrDefault(x => x.ProductID == productID[i])
                             .Quantity = Products.FirstOrDefault(x => x.ProductID == productID[i])
-                            .Quantity - qu[i];
+                            .Quantity - quantity[i];
                     }
                 }
                 operation = new Operation
