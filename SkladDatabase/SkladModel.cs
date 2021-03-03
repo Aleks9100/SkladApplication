@@ -138,23 +138,30 @@ namespace SkladDatabase
         }
         public string AddOperation(OperationStatus operations, string document, int number, List<int> quantity, DateTime? date,int employeeID, List<int> productID)
         {
-            try
-            {
+            //try
+            //{
                 Operation operation = null;
                 List<Product> addProd = new List<Product>();
                 decimal result = 0;
-                int quantit = 0;
-                for (int i = 0; i < productID.Count; i++)
+                int[] prod = new int[productID.Count];
+                int[] qu = new int[quantity.Count];
+                for (int i = 0; i < prod.Length; i++)
                 {
-                    quantit = quantit + Products.FirstOrDefault(x => x.ProductID == productID[i]).Quantity;
-                    result = result + Price_Count(Products.FirstOrDefault(x => x.ProductID == productID[i]).Price, quantity[i]);
-                    addProd.Add((Product)Products.Where(x => x.ProductID == productID[i]));
+                    foreach (var inn in quantity) { qu[i] = inn; }
+                    foreach (var inn in productID) { prod[i] = inn; }
+                }
+                int quantit = 0;
+                for (int i = 0; i < prod.Length; i++)
+                {
+                    quantit = quantit + Products.FirstOrDefault(x => x.ProductID == prod[i]).Quantity;
+                    result = result + Price_Count(Products.FirstOrDefault(x => x.ProductID == prod[i]).Price, qu[i]);
+                    addProd.Add(Products.Where(x => x.ProductID == prod[i]).FirstOrDefault());
                     if (operations == OperationStatus.Sale)
                     {
                         Products
                             .FirstOrDefault(x => x.ProductID == productID[i])
                             .Quantity = Products.FirstOrDefault(x => x.ProductID == productID[i])
-                            .Quantity - quantity[i];
+                            .Quantity - qu[i];
                     }
                 }
                 operation = new Operation
@@ -171,8 +178,8 @@ namespace SkladDatabase
                 Operations.Add(operation);
                 SaveChanges();
                 return "Запись успешно добавлена";                              
-            }
-            catch (Exception ex) { return ex.Message; }
+            //}
+            //catch (Exception ex) { return ex.Message; }
         }
         #endregion
         #region EditTables
@@ -352,9 +359,17 @@ namespace SkladDatabase
             try
             {
                 var item = Operations.FirstOrDefault(x => x.OperationID == id);
-                Operations.Remove(item);
-                SaveChanges();
-                return "Запись успешно удалена";
+                //DateTime date = DateTime.Now;
+                //DateTime time = (DateTime)item.Date_Of_Completion;
+                //int count = date.Year - time.Year;
+                if (item.Date_Of_Completion < DateTime.Now.AddYears(-1))
+                {
+
+                    Operations.Remove(item);
+                    SaveChanges();
+                    return "Запись успешно удалена";
+                }
+                else return "Невозможно удалить операцию так как операция существует меньше года";
             }
             catch (Exception ex) { return ex.Message; }
         }
@@ -412,6 +427,12 @@ namespace SkladDatabase
         public decimal ResultCount(int id, int count) =>Products.FirstOrDefault(i=>i.ProductID == id).Price * count;
 
         public bool qua(int q,int id) => Products.FirstOrDefault(x => x.ProductID == id).Quantity > q;
-        public bool count(int count) => count > 0;   
+        public bool count(int count) => count > 0;
+
+        public List<Product> GetOperationProduct(int id) 
+        {
+            var operation = Operations.Include(x=>x.Product).FirstOrDefault(x => x.OperationID == id);
+            return operation.Product.ToList();
+        }
     }
 }

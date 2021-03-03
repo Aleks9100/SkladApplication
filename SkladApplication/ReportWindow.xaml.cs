@@ -18,7 +18,7 @@ namespace SkladApplication
     /// </summary>
     public partial class ReportWindow : Window
     {
-        int id = 0;
+        int idOperation = 0;
         public ReportWindow()
         {
             InitializeComponent();
@@ -26,14 +26,19 @@ namespace SkladApplication
         public ReportWindow(int id)
         {
             InitializeComponent();
-            this.id = id;
+            idOperation = id;
+            using (var Db = new SkladModel()) 
+            {
+                DGR_Product.ItemsSource = null;
+                DGR_Product.ItemsSource = Db.GetOperationProduct(idOperation);
+            }
         }
 
         private void Btn_Report_Click(object sender, RoutedEventArgs e)
         {
             using (var Db = new SkladModel()) 
             {
-                Db.Report(id);
+                Db.Report(idOperation);
             }
         }
 
