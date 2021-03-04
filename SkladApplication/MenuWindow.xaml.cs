@@ -137,6 +137,8 @@ namespace SkladApplication
                     MessageBox.Show(DB.AddOperation(SkladTable.OperationStatus.Purchase, TB_Doc.Text, Convert.ToInt32(TB_NumD.Text),
                        quantityProduct, DP_Date_Of_Completion.SelectedDate,
                         Convert.ToInt32(CB_Empl.SelectedValue), productId));
+                    quantityProduct.Clear();
+                    productId.Clear();
                 }
                 if (CB_Oper.SelectedItem.ToString() == "Продажа")
                 {
@@ -144,6 +146,8 @@ namespace SkladApplication
                         quantityProduct, DP_Date_Of_Completion.SelectedDate,
                         Convert.ToInt32(CB_Empl.SelectedValue),
                        productId));
+                    quantityProduct.Clear();
+                    productId.Clear();
                 }
             }
             UpdateTable();
@@ -276,7 +280,6 @@ namespace SkladApplication
             UpdateComboBox();
         }
         #endregion
-
         private void TB_Quantity_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (CB_Product.SelectedValue != null)
@@ -302,8 +305,8 @@ namespace SkladApplication
         }
         private void ReportOPeration_Click(object sender, RoutedEventArgs e)
         {
-            (new ReportWindow((Convert.ToInt32(DGR_Operation.SelectedValue)))).Show();
-            this.Close();
+            (new ReportWindow(Convert.ToInt32(DGR_Operation.SelectedValue))).Show();
+            this.Close();           
         }
 
         private void AddProductInOperation_Click(object sender, RoutedEventArgs e)

@@ -26,11 +26,11 @@ namespace SkladApplication
         public ReportWindow(int id)
         {
             InitializeComponent();
-            idOperation = id;
+            idOperation = id;          
             using (var Db = new SkladModel()) 
             {
                 DGR_Product.ItemsSource = null;
-                DGR_Product.ItemsSource = Db.GetOperationProduct(idOperation);
+                DGR_Product.ItemsSource = Db.GetOperationProduct(idOperation);    
             }
         }
 
