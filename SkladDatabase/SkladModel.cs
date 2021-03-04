@@ -148,7 +148,7 @@ namespace SkladDatabase
             for (int i = 0; i < productID.Count; i++)
             {
                 var sale = Products.FirstOrDefault(x => x.ProductID == productID[i]);
-                quantit = quantit + Products.FirstOrDefault(x => x.ProductID == productID[i]).Quantity;
+                quantit = quantit + quantity[i];
                 result = result + Price_Count(Products.FirstOrDefault(x => x.ProductID == productID[i]).Price, quantity[i]);
                 addProd.Add(Products.FirstOrDefault(x => x.ProductID == productID[i]));
                 if (operations == OperationStatus.Sale)
@@ -379,35 +379,41 @@ namespace SkladDatabase
 
         public void Report(int id)
         {
-            string dir = System.Reflection.Assembly.GetExecutingAssembly().Location.Replace(@"SkladDatabase.dll", "");
-            string fileName = $@"{dir}\shablon.xlsx";
-            var workbook = new XLWorkbook(fileName);
-            workbook.AddWorksheet();
-            var worksheet = workbook.Worksheet(1);
-            int row = 10;
-            var report = Operations
-                .Include(x => x.Product)
-                .Include(x => x.Employee)
-                .FirstOrDefault(i => i.OperationID == id);
-            int count = 1 ;         
-            foreach (var order in report.Product)
+            try
             {
-                worksheet.Cell("C" + row).Value = order.Title;
-                worksheet.Cell("H" + row).Value = report.Quantity;
-                worksheet.Cell("I" + row).Value = order.Price;
-                worksheet.Cell("J" + row).Value = report.Result;
-                count++;              
-                row++;               
+                string dir = System.Reflection.Assembly.GetExecutingAssembly().Location.Replace(@"SkladDatabase.dll", "");
+                string fileName = $@"{dir}\shablon.xlsx";
+                var workbook = new XLWorkbook(fileName);
+                workbook.AddWorksheet();
+                var worksheet = workbook.Worksheet(1);
+                int row = 10;
+                var report = Operations
+                    .Include(x => x.Product)
+                    .Include(x => x.Employee)
+                    .FirstOrDefault(i => i.OperationID == id);
+                int count = 1;
+                if (OperationStatus.Sale == report.OperationStatus)
+                    worksheet.Cell("D" + 5).Value = "Продажа";
+                else worksheet.Cell("D" + 5).Value = "Покупка";
+                foreach (var order in report.Product)
+                {
+                    worksheet.Cell("C" + row).Value = order.Title;
+                    worksheet.Cell("H" + row).Value = report.Number_Document;
+                    worksheet.Cell("I" + row).Value = order.Price;
+                    count++;
+                    row++;
+                }
+                worksheet.Cell("G" + 22).Value = report.Quantity;
+                worksheet.Cell("J" + 22).Value = report.Result;
+                worksheet.Cell("D" + 25).Value = report.Employee.FirstName;
+                worksheet.Cell("J" + 25).Value = report.Employee.FirstName;
+                worksheet.Cell("J" + 5).Value = report.Date_Of_Completion;
+                worksheet.Columns().AdjustToContents();
+                System.Reflection.Assembly.GetExecutingAssembly().Location.Replace(@"SkladApplication.dll", "");
+                fileName = $@"{dir}\Отчет\Отчет.xlsx";
+                workbook.SaveAs(fileName);
             }
-            worksheet.Cell("D" + 25).Value =report.Employee.LastName;
-            worksheet.Cell("J" + 25).Value = report.Employee.LastName;
-            worksheet.Cell("J" + 5).Value = report.Date_Of_Completion;
-            worksheet.Columns().AdjustToContents();
-            System.Reflection.Assembly.GetExecutingAssembly().Location.Replace(@"SkladApplication.dll", "");
-            fileName = $@"{dir}\Отчет\Отчет.xlsx";
-            workbook.SaveAs(fileName);
-            //тут сам разбирайся
-            //System.Diagnostics.Process.Start(fileName);
+            catch (Exception ex) {}
         }
 
         public DbSet<User> Users { get; set; }

@@ -38,7 +38,12 @@ namespace SkladApplication
                 } 
                 if (user.Status == SkladTable.Status.Admin)
                 {
-                    (new MenuWindow()).Show();
+                    (new MenuWindow("Admin")).Show();
+                    this.Close();
+                }
+                else
+                {
+                    (new MenuWindow("User")).Show();
                     this.Close();
                 }
             }

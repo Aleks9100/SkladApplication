@@ -7,9 +7,6 @@
         mc:Ignorable="d"
        Title="Menu" Height="550" Width="990" Background="#808080">
     <Window.Resources>
-        <Style TargetType="DockPanel">
-            <Setter Property="Background" Value="#C0C0C0"/>
-        </Style>
         <Style TargetType="Button">
             <Setter Property="Foreground" Value="#00BFFF"/>
             <Setter Property="BorderBrush" Value="Gray"/>
@@ -77,7 +74,7 @@
                             <DataGridTextColumn Header="Сотрудник"  Binding="{Binding Path=Employee.LastName}" Width="*"/>
                         </DataGrid.Columns>
                     </DataGrid>
-                    <DockPanel Background="#C0C0C0" Grid.Column="1">
+                    <DockPanel x:Name="AdminPanelOperatoin" Grid.Column="1">
                         <StackPanel DockPanel.Dock="Top">
                             <TextBlock Text="Движение"/>
                             <ComboBox x:Name="CB_Oper"/>
@@ -122,7 +119,7 @@
                             <DataGridTextColumn Header="Единица измерения"  Binding="{Binding Path=Unit_Of_Measurement.Short_Title}" Width="*"/>
                         </DataGrid.Columns>
                     </DataGrid>
-                    <DockPanel Grid.Column="1">
+                    <DockPanel x:Name="AdminPanelProduct" Grid.Column="1">
                         <StackPanel DockPanel.Dock="Top">
                             <TextBlock Text="Название"/>
                             <TextBox x:Name="TB_TitleP"/>
@@ -156,7 +153,7 @@
                             <DataGridTextColumn Header="Отчество"  Binding="{Binding Path=MiddleName}" Width="*"/>
                         </DataGrid.Columns>
                     </DataGrid>
-                    <DockPanel Grid.Column="1">
+                    <DockPanel x:Name="AdminPanelEmployee" Grid.Column="1">
                         <StackPanel DockPanel.Dock="Top">
                             <TextBlock Text="Фамилия"/>
                             <TextBox x:Name="TB_FirstNameE"/>
@@ -184,7 +181,7 @@
                             <DataGridTextColumn Header="Название"  Binding="{Binding Path=Title}" Width="*"/>
                         </DataGrid.Columns>
                     </DataGrid>
-                    <DockPanel Grid.Column="1">
+                    <DockPanel x:Name="AdminPanelType" Grid.Column="1">
                         <StackPanel DockPanel.Dock="Top">
                             <TextBlock Text="Название"/>
                             <TextBox x:Name="TB_Title_Type"/>
@@ -209,7 +206,7 @@
                             <DataGridTextColumn Header="Краткое название"  Binding="{Binding Path=Short_Title}"/>
                         </DataGrid.Columns>
                     </DataGrid>
-                    <DockPanel Grid.Column="1">
+                    <DockPanel x:Name="AdminPanelUnit" Grid.Column="1">
                         <StackPanel DockPanel.Dock="Top">
                             <TextBlock Text="Полное название"/>
                             <TextBox x:Name="TB_TitleFull"/>
@@ -224,7 +221,7 @@
                     </DockPanel>
                 </Grid>
             </TabItem>
-            <TabItem Header="Пользователи">
+            <TabItem Name="UserPanel" Header="Пользователи">
                 <Grid Background="#FFE5E5E5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="7*"/>

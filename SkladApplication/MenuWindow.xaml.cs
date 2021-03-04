@@ -26,6 +26,24 @@ namespace SkladApplication
             UpdateTable();
             UpdateComboBox();
         }
+        public MenuWindow(string user)
+        {
+            using (var Db = new SkladModel())
+            {
+                InitializeComponent();
+                UpdateTable();
+                UpdateComboBox();
+                if (user == "User")
+                {
+                    AdminPanelProduct.Visibility = Visibility.Hidden;
+                    AdminPanelEmployee.Visibility = Visibility.Hidden;
+                    AdminPanelOperatoin.Visibility = Visibility.Hidden;
+                    AdminPanelType.Visibility = Visibility.Hidden;
+                    AdminPanelUnit.Visibility = Visibility.Hidden;
+                    UserPanel.Visibility = Visibility.Hidden;
+                }
+            }
+        }
 
         private void UpdateTable() 
         {
@@ -329,6 +347,7 @@ namespace SkladApplication
                 }
                 else MessageBox.Show("Количество меньше или равно 0");
             }
+            MessageBox.Show("Товар добавлен");
         }
     }
 }
