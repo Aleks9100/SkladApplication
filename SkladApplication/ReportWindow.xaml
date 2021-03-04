@@ -43,7 +43,6 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Название"  Binding="{Binding Path=Title}" Width="*"/>
                 <DataGridTextColumn Header="Цена"  Binding="{Binding Path=Price}" Width="*"/>
-                <DataGridTextColumn Header="Тип продукта"  Binding="{Binding Path=Product_Type.Title}" Width="*"/>
             </DataGrid.Columns>
         </DataGrid>
         <Button x:Name="Btn_Report" Content="Печать" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" Click="Btn_Report_Click"/>
