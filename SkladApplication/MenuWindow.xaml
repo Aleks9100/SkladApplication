@@ -156,9 +156,9 @@
                     <DockPanel x:Name="AdminPanelEmployee" Grid.Column="1">
                         <StackPanel DockPanel.Dock="Top">
                             <TextBlock Text="Фамилия"/>
-                            <TextBox x:Name="TB_FirstNameE"/>
-                            <TextBlock Text="Имя"/>
                             <TextBox x:Name="TB_LastNameE"/>
+                            <TextBlock Text="Имя"/>
+                            <TextBox x:Name="TB_FirstNameE"/>
                             <TextBlock Text="Отчество"/>
                             <TextBox x:Name="TB_MidleNameE"/>
                         </StackPanel>

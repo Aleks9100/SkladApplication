@@ -11,12 +11,12 @@ namespace SkladDatabase
 {
     public class SkladModel : DbContext
     {
-
         public SkladModel()
         {
+            Database.EnsureCreated();
             int id = 0;
             foreach (var use in Users) { id = use.UserID; }
-            if (Database.EnsureCreated() || id == 0)
+            if (id == 0)
             {
                 User user = new User
                 {
@@ -40,20 +40,7 @@ namespace SkladDatabase
 
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            var builder = new NpgsqlConnectionStringBuilder()
-            {
-                Host = "ec2-52-209-134-160.eu-west-1.compute.amazonaws.com",
-                Port = 5432,
-                Username = "lhicitahhnsdal",
-                Password = "bde6b2bd7dcca614a576a259c22ee9457ba652ad86723d0e12e240fedf8c4d04",
-                Database = "de3mqr6btc02n",
-                SslMode = SslMode.Require,
-                TrustServerCertificate = true
-            };
-            optionsBuilder.UseNpgsql(builder.ToString());
-        }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => optionsBuilder.UseSqlServer(@"data source=(LocalDb)\MSSQLLocalDB;initial catalog=SkladApplication.SkladModel;Trusted_Connection=True;");
 
         #region AddTables
         public string AddUser(string login, string passsword, Status status)
